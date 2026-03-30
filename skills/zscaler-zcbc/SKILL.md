@@ -1,5 +1,7 @@
 ---
 name: zscaler-zcbc
+version: 1.0.0
+postman_revision: 2026-03-30
 description: Use when working with ZCBC (Cloud & Branch Connector) via OneAPI — partner integrations, policy resources, admin roles, location management, connector groups.
 ---
 

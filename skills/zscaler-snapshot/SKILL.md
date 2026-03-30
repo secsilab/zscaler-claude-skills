@@ -1,5 +1,6 @@
 ---
 name: zscaler-snapshot
+version: 1.0.0
 description: Use when backing up Zscaler tenant config, comparing changes between points in time, detecting drift, or rolling back to a previous state.
 ---
 

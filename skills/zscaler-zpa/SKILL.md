@@ -1,5 +1,7 @@
 ---
 name: zscaler-zpa
+version: 1.1.0
+postman_revision: 2026-03-30
 description: Use when working with ZPA — application segments, access policies, PRA/BA, connectors, service edges, segment groups, server groups, SCIM, LSS, isolation, certificates, microtenants, tags.
 ---
 

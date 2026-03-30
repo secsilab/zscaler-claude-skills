@@ -1,5 +1,6 @@
 ---
 name: zscaler-audit
+version: 1.0.0
 description: Use when auditing Zscaler tenant security posture, checking for misconfigurations, or reviewing hygiene. Use after initial setup or periodically.
 ---
 

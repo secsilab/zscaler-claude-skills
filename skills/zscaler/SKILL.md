@@ -1,5 +1,6 @@
 ---
 name: zscaler
+version: 1.0.0
 description: Use when managing ANY Zscaler component and you need to determine which product API to use, or when working across multiple products. Routes to the appropriate product skill.
 ---
 

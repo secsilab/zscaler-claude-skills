@@ -1,5 +1,6 @@
 ---
 name: zscaler-setup
+version: 1.0.0
 description: Use when setting up Zscaler MCP integration from scratch, when .mcp.json is missing, or when a colleague needs to configure their Zscaler API access. Interactive wizard that installs dependencies, collects credentials, and validates connectivity.
 ---
 
