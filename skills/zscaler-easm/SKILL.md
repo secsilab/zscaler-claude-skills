@@ -11,29 +11,8 @@ EASM discovers external attack surface: exposed assets, findings, lookalike doma
 ## MCP Tools
 Available: `zeasm_list_findings`, `zeasm_get_finding_details`, `zeasm_get_finding_evidence`, `zeasm_get_finding_scan_output`, `zeasm_list_lookalike_domains`, `zeasm_get_lookalike_domain`, `zeasm_list_organizations`.
 
-## API Reference
 
-### Organizations (1 endpoint)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/organizations` | Organizations |
-
-### Findings (4 endpoints)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/organizations/{{orgId}}/findings` | Get List of Findings |
-| GET | `/organizations/{{orgId}}/findings/{{findingId}}/details` | Get Details of Findings |
-| GET | `/organizations/{{orgId}}/findings/{{findingId}}/evidence` | Retrieve Scan Evidence |
-| GET | `/organizations/{{orgId}}/findings/{{findingId}}/scan-output` | Retrieve Scan Output |
-
-### LookALike Domains (2 endpoints)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/organizations/{{orgId}}/lookalike-domains` | Retrieve List of LookALike Domains |
-| GET | `/organizations/{{orgId}}/lookalike-domains/{{lookalikeRaw}}/details` | Retrieve Details of LookALike Domains By ID |
+For full API endpoint reference, see ENDPOINTS.md in this skill directory.
 
 ## Authentication
 OneAPI OAuth2. Base URL: `https://api.zsapi.net/easm/api/v1`
