@@ -1,6 +1,6 @@
 # Zscaler Skills Suite for Claude Code
 
-19 modular [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills for managing Zscaler infrastructure across all products. Covers **1,677 API endpoints** with natural language commands.
+21 modular [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills for managing Zscaler infrastructure across all products. Covers **1,677 API endpoints** with natural language commands.
 
 ## What are Claude Code Skills?
 
@@ -24,8 +24,8 @@ bash install.sh
 
 Options:
 ```bash
-bash install.sh                    # Install all 19 skills
-bash install.sh --operational-only # Install 8 operational skills only
+bash install.sh                    # Install all 21 skills
+bash install.sh --operational-only # Install 10 operational skills only
 bash install.sh --product-only     # Install 11 product skills only
 ```
 
@@ -57,7 +57,7 @@ This chains: setup -> discover -> audit -> snapshot — giving you a complete pi
 
 ## Skills
 
-### Operational Skills (8)
+### Operational Skills (10)
 
 Start here. These guide workflows and chain product skills automatically.
 
@@ -71,6 +71,8 @@ Start here. These guide workflows and chain product skills automatically.
 | **Troubleshoot** | `/zscaler-troubleshoot` | Interactive diagnostics (6 flows: connectivity, access, DNS, ...) |
 | **Snapshot** | `/zscaler-snapshot` | Config backup, drift detection, point-in-time comparison |
 | **Deploy** | `/zscaler-deploy` | Deployment templates (6 recipes: app, server, location, DLP, ...) |
+| **Migrate** | `/zscaler-migrate` | Competitive migration — assessment, 6 vendor playbooks, API execution |
+| **Bridge** | `/zscaler-bridge` | Translate design docs (from zstack or manual) into API call sequences |
 
 ### Product Skills (11)
 

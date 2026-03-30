@@ -19,7 +19,7 @@ fi
 echo "[OK] Claude Code found"
 
 # All skills to install
-OPERATIONAL="zscaler zscaler-setup zscaler-onboard zscaler-discover zscaler-audit zscaler-troubleshoot zscaler-snapshot zscaler-deploy"
+OPERATIONAL="zscaler zscaler-setup zscaler-onboard zscaler-discover zscaler-audit zscaler-troubleshoot zscaler-snapshot zscaler-deploy zscaler-migrate zscaler-bridge"
 PRODUCT="zscaler-zia zscaler-zpa zscaler-ztb zscaler-zcbc zscaler-zcc zscaler-zdx zscaler-zid zscaler-easm zscaler-zwa zscaler-aiguard zscaler-zinsights"
 
 ALL_SKILLS="$OPERATIONAL $PRODUCT"
@@ -62,6 +62,8 @@ echo "  /zscaler-audit        Security and hygiene audit (22 checks)"
 echo "  /zscaler-troubleshoot Interactive diagnostics (6 flows)"
 echo "  /zscaler-snapshot     Config snapshots and drift detection"
 echo "  /zscaler-deploy       Deployment templates (6 recipes)"
+echo "  /zscaler-migrate      Competitive migration (6 vendor playbooks + API execution)"
+echo "  /zscaler-bridge       Translate design docs into API call sequences"
 echo ""
 echo "Product skills (loaded automatically by the router):"
 echo "  /zscaler-zia   /zscaler-zpa   /zscaler-ztb   /zscaler-zcbc"
