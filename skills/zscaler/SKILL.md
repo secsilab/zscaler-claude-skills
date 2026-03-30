@@ -34,6 +34,8 @@ This skill routes requests to the correct product skill. It does NOT contain det
 | @zscaler-snapshot | Config backup, compare, and restore |
 | @zscaler-deploy | Deployment templates (web app, SSH/RDP, location, site, DLP, extranet) |
 | @zscaler-troubleshoot | Interactive diagnostic flows (6 scenarios) |
+| @zscaler-migrate | Competitive migration (assessment, 6 vendor playbooks, API execution) |
+| @zscaler-bridge | Translate design documents into executable API call sequences |
 
 ## Resolution Strategy
 
