@@ -11,19 +11,8 @@ AI Guard inspects content against AI/ML security policies. Use for detecting sen
 ## MCP Tools
 No MCP tools. Direct API calls only.
 
-## API Reference
 
-### Resolve Execute Policy (1 endpoint)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/detection/resolve-and-execute-policy` | Resolve Execute Policy |
-
-### Execute Policy (1 endpoint)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/detection/execute-policy` | Execute Policy |
+For full API endpoint reference, see ENDPOINTS.md in this skill directory.
 
 ## Authentication
 Bearer token authentication. Base URL: `https://{{ZAIGuardBase}}/detection`
