@@ -47,6 +47,11 @@ for skill in $SKILLS; do
     fi
     mkdir -p "$SKILLS_DIR/$skill"
     cp "$src" "$SKILLS_DIR/$skill/SKILL.md"
+    # Copy ENDPOINTS.md if it exists (product skills with API reference)
+    endpoints_src="$SCRIPT_DIR/skills/$skill/ENDPOINTS.md"
+    if [ -f "$endpoints_src" ]; then
+        cp "$endpoints_src" "$SKILLS_DIR/$skill/ENDPOINTS.md"
+    fi
     echo "[OK] $skill"
     INSTALLED=$((INSTALLED + 1))
 done
