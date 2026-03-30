@@ -1,31 +1,8 @@
 # Zscaler Skills Suite for Claude Code
 
-**112 skills** for Zscaler — 21 execution skills (API-powered) + 91 planning skills from [zstack](https://github.com/pganti/zstack). Covers **1,677 API endpoints** with natural language commands.
+112 skills for Zscaler — plan with [zstack](https://github.com/pganti/zstack), execute with API. **1,677 endpoints** covered.
 
-```
- Plan (zstack)                    Execute (this project)
- ┌─────────────────┐              ┌─────────────────────┐
- │ /zia-ssl         │──design──> │ /zscaler-bridge      │──API──> Zscaler
- │ /migrate-palo    │            │ /zscaler-migrate     │
- │ /ps-scoping      │            │ /zscaler-deploy      │
- │ /dlp-design      │            │ /zscaler-audit       │
- └─────────────────┘              └─────────────────────┘
-   WHAT to build                    HOW to execute
-```
-
-## What are Claude Code Skills?
-
-[Skills](https://docs.anthropic.com/en/docs/claude-code/skills) are reusable prompt files that teach Claude Code domain-specific knowledge. Type `/zscaler-audit` and Claude knows every API endpoint, every parameter, every workflow to audit your Zscaler tenant — no coding required.
-
-## Quick Start
-
-### Prerequisites
-
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed
-- [Zscaler MCP Server](https://github.com/zscaler/zscaler-mcp) installed (`uv tool install zscaler-mcp`)
-- Zscaler API credentials (Client ID, Client Secret, Customer ID)
-
-### Install
+## Install
 
 ```bash
 git clone https://github.com/secsilab/zscaler-claude-skills.git
@@ -33,205 +10,117 @@ cd zscaler-claude-skills
 bash install.sh
 ```
 
-By default, the installer clones both this project (21 execution skills) **and** [zstack](https://github.com/pganti/zstack) (91 planning/design skills) for the complete plan-to-execute workflow.
+This installs 21 execution skills + 91 planning skills ([zstack](https://github.com/pganti/zstack)). Use `--skills-only` to skip zstack.
+
+**Prerequisites:** [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Zscaler MCP Server](https://github.com/zscaler/zscaler-mcp) (`uv tool install zscaler-mcp`), API credentials.
+
+## Get Started
+
+```
+/zscaler-setup       Configure credentials (interactive wizard)
+/zscaler-onboard     Full onboarding: setup → discover → audit → snapshot
+```
+
+**Typical workflow:**
+1. `/zia-ssl` — design SSL inspection with zstack (CA model, bypass list, compliance)
+2. `/zscaler-bridge` — translate the design into API calls
+3. `/zscaler-audit` — validate with 22 security checks
+4. `/zscaler-snapshot` — backup the config
+
+## Execution Skills (21)
+
+### Operational (10)
+
+| Command | Description |
+|---------|-------------|
+| `/zscaler` | Routes to the right product skill |
+| `/zscaler-setup` | Credential wizard — installs MCP, validates connectivity |
+| `/zscaler-onboard` | Full onboarding (setup + discover + audit + snapshot) |
+| `/zscaler-discover` | Scan tenant, generate inventory |
+| `/zscaler-audit` | Security audit — 22 checks across ZIA/ZPA/ZDX |
+| `/zscaler-troubleshoot` | Interactive diagnostics (6 flows) |
+| `/zscaler-snapshot` | Config backup, drift detection, rollback |
+| `/zscaler-deploy` | Deployment templates (6 recipes) |
+| `/zscaler-migrate` | Competitive migration — 6 vendor playbooks + API execution |
+| `/zscaler-bridge` | Translate design docs into API call sequences |
+
+### Product (11)
+
+Loaded automatically by the router. Each skill has a `SKILL.md` (human-written expertise) and an `ENDPOINTS.md` (auto-generated API reference).
+
+| Command | Endpoints | Covers |
+|---------|-----------|--------|
+| `/zscaler-zia` | 428 | Firewall, URL filtering, DLP, SSL, cloud apps, locations, GRE, sandbox |
+| `/zscaler-zpa` | 328 | App segments, access policies, PRA/BA, connectors, SCIM, isolation |
+| `/zscaler-ztb` | 674 | Sites, gateways, VLANs, PBR, VRRP, IPsec, GRE, WireGuard, BGP, OSPF |
+| `/zscaler-zcbc` | 97 | Cloud & Branch Connector — partner integrations, connector groups |
+| `/zscaler-zcc` | 33 | Client Connector — devices, forwarding profiles, enrollment |
+| `/zscaler-zdx` | 42 | Digital Experience — app monitoring, alerts, deep traces |
+| `/zscaler-zid` | 31 | ZIdentity — users, groups, API clients, directory sync |
+| `/zscaler-easm` | 7 | External Attack Surface — findings, lookalike domains |
+| `/zscaler-zwa` | 19 | Workflow Automation — DLP incidents, evidence, closure |
+| `/zscaler-aiguard` | 2 | AI/ML content detection and policy execution |
+| `/zscaler-zinsights` | 16 | Analytics — traffic, firewall stats, shadow IT, IoT |
+
+## Planning Skills (91 — zstack)
+
+Installed by default via `bash install.sh`. [zstack](https://github.com/pganti/zstack) provides PS consulting expertise:
+
+| Category | Examples | Skills |
+|----------|---------|--------|
+| PS Lifecycle | `/ps-scoping`, `/isp`, `/ps-sow`, `/ps-handoff` | 6 |
+| ZIA Design | `/zia-ssl`, `/zia-policy`, `/zia-firewall`, `/zia-dlp-inline` | 6 |
+| ZPA Design | `/zpa-connectors`, `/zpa-segments`, `/vpn-migration` | 6 |
+| Data Protection | `/dlp-design`, `/casb-inline`, `/ai-guard` | 7 |
+| Migrations | `/migrate-palo-alto`, `/migrate-checkpoint`, `/migrate-cisco` | 8 |
+| ZTB / ZDX / ZCC | `/ztb-design`, `/zdx-deployment`, `/zcc-deployment` | 14 |
+| SecOps / ITDR | `/secops-incident-response`, `/itdr-setup` | 9 |
+| Other | `/bc-design`, `/sovereign-cloud`, `/microsegmentation` | 35 |
+
+Full list: see [zstack CLAUDE.md](https://github.com/pganti/zstack/blob/main/CLAUDE.md)
+
+## How It Works
+
+```
+/zscaler "list all DLP rules"
+    → [Router] identifies ZIA
+    → [zscaler-zia] SKILL.md (tools, gotchas) + ENDPOINTS.md (API reference)
+    → [Zscaler MCP Server] executes API call
+    → Claude presents results
+```
+
+**Two layers, one workflow:**
+- **zstack** = consulting brain (what to build, why, gotchas from field experience)
+- **This project** = execution hands (API calls via MCP, audit, snapshot, deploy)
+
+## Keeping Endpoints Up to Date
+
+A [GitHub Action](.github/workflows/postman-drift.yml) runs bi-monthly to detect changes in Zscaler's [Postman collections](https://www.postman.com/zscaler/zscaler-developers/). When drift is found, it regenerates `ENDPOINTS.md` files and opens a PR.
 
 ```bash
-bash install.sh                    # Full install: 21 execution + 91 planning skills
-bash install.sh --skills-only      # Execution skills only (skip zstack)
-bash install.sh --operational-only # 10 operational skills only
-bash install.sh --product-only     # 11 product skills only
-bash install.sh --help             # Show all options
-```
-
-### Configure MCP
-
-Copy the example config to your project:
-
-```bash
-cp .mcp.json.example /path/to/your/project/.mcp.json
-```
-
-Edit `.mcp.json` with your credentials, then run Claude Code and type:
-
-```
-/zscaler-setup
-```
-
-The interactive wizard validates your connectivity and generates the config.
-
-### First Run
-
-For a new tenant, use the onboarding flow:
-
-```
-/zscaler-onboard
-```
-
-This chains: setup -> discover -> audit -> snapshot — giving you a complete picture of your tenant in one command.
-
-### Typical Workflow
-
-1. **Plan** with zstack: `/zia-ssl` designs your SSL inspection (CA model, bypass list, compliance mapping)
-2. **Execute** with bridge: `/zscaler-bridge` translates the design into MCP API calls
-3. **Validate**: `/zscaler-audit` runs 22 security checks post-deployment
-4. **Backup**: `/zscaler-snapshot` captures the new config state
-
-## Skills
-
-### Operational Skills (10)
-
-Start here. These guide workflows and chain product skills automatically.
-
-| Skill | Command | Version | Description |
-|-------|---------|---------|-------------|
-| **Router** | `/zscaler` | 1.0.0 | Routes requests to the right product skill automatically |
-| **Setup** | `/zscaler-setup` | 1.0.0 | Interactive credential wizard — installs MCP, validates connectivity |
-| **Onboard** | `/zscaler-onboard` | 1.0.0 | Full onboarding flow (setup + discover + audit + snapshot) |
-| **Discover** | `/zscaler-discover` | 1.0.0 | Scans tenant, generates full inventory |
-| **Audit** | `/zscaler-audit` | 1.0.0 | Security and hygiene audit (22 checks across ZIA/ZPA/ZDX) |
-| **Troubleshoot** | `/zscaler-troubleshoot` | 1.0.0 | Interactive diagnostics (6 flows: connectivity, access, DNS, ...) |
-| **Snapshot** | `/zscaler-snapshot` | 1.0.0 | Config backup, drift detection, point-in-time comparison |
-| **Deploy** | `/zscaler-deploy` | 1.0.0 | Deployment templates (6 recipes: app, server, location, DLP, ...) |
-| **Migrate** | `/zscaler-migrate` | 1.0.0 | Competitive migration — assessment, 6 vendor playbooks, API execution |
-| **Bridge** | `/zscaler-bridge` | 1.0.0 | Translate design docs (from zstack or manual) into API call sequences |
-
-### Product Skills (11)
-
-Deep API knowledge for each Zscaler product. Loaded automatically by the router when needed.
-
-| Skill | Command | Version | Endpoints | Covers |
-|-------|---------|---------|-----------|--------|
-| **ZIA** | `/zscaler-zia` | 1.1.0 | 428 | Firewall, URL filtering, DLP, SSL inspection, cloud apps, locations, GRE, sandbox, ATP |
-| **ZPA** | `/zscaler-zpa` | 1.1.0 | 328 | App segments, access policies, PRA/BA, connectors, service edges, SCIM, isolation |
-| **ZTB** | `/zscaler-ztb` | 1.1.0 | 674 | AirGap API — sites, gateways, VLANs, PBR, VRRP, IPsec, GRE, WireGuard, BGP, OSPF |
-| **ZCBC** | `/zscaler-zcbc` | 1.0.0 | 97 | Cloud & Branch Connector via OneAPI — partner integrations, connector groups |
-| **ZCC** | `/zscaler-zcc` | 1.1.0 | 33 | Client Connector — devices, forwarding profiles, trusted networks, enrollment |
-| **ZDX** | `/zscaler-zdx` | 1.0.0 | 42 | Digital Experience — app monitoring, device metrics, alerts, deep traces |
-| **ZID** | `/zscaler-zid` | 1.0.0 | 31 | ZIdentity — users, groups, API clients, resource servers, directory sync |
-| **EASM** | `/zscaler-easm` | 1.0.0 | 7 | External Attack Surface Management — findings, lookalike domains |
-| **ZWA** | `/zscaler-zwa` | 1.0.0 | 19 | Workflow Automation — DLP incidents, evidence, closure, audit logs |
-| **AI Guard** | `/zscaler-aiguard` | 1.0.0 | 2 | AI/ML content detection and policy execution |
-| **ZInsights** | `/zscaler-zinsights` | 1.0.0 | 16 | Analytics — web traffic, firewall stats, cyber incidents, shadow IT, IoT |
-
-## Skill Versioning
-
-Every skill has a `version` field (semver) in its YAML frontmatter. Product skills also have `postman_revision` tracking which Postman collection version they were built from.
-
-```yaml
----
-name: zscaler-zia
-version: 1.1.0
-postman_revision: 2026-03-30
-description: Use when working with ZIA...
----
-```
-
-- **`version`** — bumped manually when the skill's human-written content changes
-- **`postman_revision`** — bumped automatically by CI when Postman endpoints are updated
-
-## ENDPOINTS.md — API Reference Files
-
-Product skills are split into two files:
-
-```
-skills/zscaler-zia/
-├── SKILL.md       — Human-written: overview, MCP tools, gotchas, patterns, limitations
-└── ENDPOINTS.md   — Auto-generated: full API endpoint reference tables
-```
-
-- `SKILL.md` contains domain expertise, field gotchas, and workflow guidance
-- `ENDPOINTS.md` contains comprehensive API endpoint tables generated from Zscaler's official Postman collections
-- Both files are installed to `~/.claude/skills/<skill>/` and Claude reads both when the skill is invoked
-- Only the 11 product skills have ENDPOINTS.md; operational skills remain single-file
-
-## Postman Drift Detection
-
-A GitHub Action runs bi-monthly (1st and 15th) to detect changes in Zscaler's official Postman collections:
-
-1. Fetches metadata from the [Zscaler Developers workspace](https://www.postman.com/zscaler/zscaler-developers/)
-2. Compares `updatedAt` timestamps against stored values
-3. If changes detected: downloads full collection, regenerates ENDPOINTS.md files, opens a PR
-
-Collections tracked:
-- **OneAPI** (ZIA, ZPA, ZCBC, ZDX, ZCC, ZID, EASM)
-- **ZTB** (AirGap API)
-- **ZWA** (Workflow Automation)
-- **AI Guard**
-
-You can also run the check locally:
-
-```bash
-python3 tools/generate_endpoints.py --check   # Check for drift only
+python3 tools/generate_endpoints.py --check   # Check for drift locally
 python3 tools/generate_endpoints.py            # Regenerate all ENDPOINTS.md
 ```
 
-## Architecture
+## Versioning
 
-```
-User types /zscaler "list all DLP rules"
-       |
-       v
-  [zscaler] Router skill
-       |  Identifies: this is a ZIA DLP question
-       v
-  [zscaler-zia] Product skill
-       |  SKILL.md: MCP tools, gotchas, workflows
-       |  ENDPOINTS.md: Full API reference (auto-generated)
-       v
-  [Zscaler MCP Server] Executes the API call
-       |
-       v
-  Claude formats and presents the results
+Skills use semver in their YAML frontmatter:
+
+```yaml
+name: zscaler-zia
+version: 1.1.0
+postman_revision: 2026-03-30
 ```
 
-The router (`/zscaler`) detects which product is relevant and loads the right skill. You can also invoke product skills directly if you know which product you need.
-
-### zstack Integration
-
-[zstack](https://github.com/pganti/zstack) is automatically installed by `bash install.sh` (skip with `--skills-only`). It provides 91 planning/design skills from Zscaler Professional Services:
-
-- **PS lifecycle**: scoping, SOWs, proposals, kickoff, handoff
-- **Product design**: SSL inspection, DLP policies, ZPA segments, ZTB architecture
-- **Competitive migration**: Palo Alto, Check Point, Netskope, Cisco, Symantec, Forcepoint playbooks
-- **Knowledge base**: RAG-powered best practices Q&A
-
-zstack designs **what** to build; this project executes **how** via API.
-
-## Tools
-
-### `tools/generate_endpoints.py`
-
-Downloads Zscaler's official Postman collections and generates ENDPOINTS.md files for each product skill. Used by the Postman drift detection GitHub Action.
-
-```bash
-python3 tools/generate_endpoints.py                     # Generate all from Postman
-python3 tools/generate_endpoints.py --check              # Check for drift only
-python3 tools/generate_endpoints.py --skill zscaler-zia  # Generate for one skill
-```
-
-### `tools/split_endpoints.py`
-
-One-time migration script that extracts API Reference sections from SKILL.md into separate ENDPOINTS.md files.
-
-### `tools/extract_postman.py`
-
-Converts Zscaler's official Postman collection JSON files into Markdown endpoint tables. Legacy tool, superseded by `generate_endpoints.py` for most use cases.
-
-```bash
-python3 tools/extract_postman.py collection.json
-python3 tools/extract_postman.py collection.json --folder "DLP Policies"
-```
-
-### `tools/postman_sources.json`
-
-Configuration file tracking Postman collection UIDs, download URLs, folder-to-skill mappings, and last update timestamps.
+- `version` — bumped on human edits
+- `postman_revision` — bumped by CI when Postman endpoints update
 
 ## Requirements
 
-- **Claude Code** v1.0+ (Claude Pro, Max, or Team plan)
-- **Zscaler MCP Server** (`zscaler-mcp`) — the official Zscaler MCP integration
-- **Zscaler API access** — OAuth2 client credentials with appropriate permissions
-- **Python 3.10+** (for the tools)
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) v1.0+
+- [Zscaler MCP Server](https://github.com/zscaler/zscaler-mcp) (`uv tool install zscaler-mcp`)
+- Zscaler API credentials (OAuth2 client credentials)
+- Python 3.10+ (for tools only)
 
 ## License
 
