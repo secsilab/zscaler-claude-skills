@@ -1,6 +1,17 @@
 # Zscaler Skills Suite for Claude Code
 
-21 modular [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills for managing Zscaler infrastructure across all products. Covers **1,677 API endpoints** with natural language commands.
+**112 skills** for Zscaler — 21 execution skills (API-powered) + 91 planning skills from [zstack](https://github.com/pganti/zstack). Covers **1,677 API endpoints** with natural language commands.
+
+```
+ Plan (zstack)                    Execute (this project)
+ ┌─────────────────┐              ┌─────────────────────┐
+ │ /zia-ssl         │──design──> │ /zscaler-bridge      │──API──> Zscaler
+ │ /migrate-palo    │            │ /zscaler-migrate     │
+ │ /ps-scoping      │            │ /zscaler-deploy      │
+ │ /dlp-design      │            │ /zscaler-audit       │
+ └─────────────────┘              └─────────────────────┘
+   WHAT to build                    HOW to execute
+```
 
 ## What are Claude Code Skills?
 
@@ -22,11 +33,14 @@ cd zscaler-claude-skills
 bash install.sh
 ```
 
-Options:
+By default, the installer clones both this project (21 execution skills) **and** [zstack](https://github.com/pganti/zstack) (91 planning/design skills) for the complete plan-to-execute workflow.
+
 ```bash
-bash install.sh                    # Install all 21 skills
-bash install.sh --operational-only # Install 10 operational skills only
-bash install.sh --product-only     # Install 11 product skills only
+bash install.sh                    # Full install: 21 execution + 91 planning skills
+bash install.sh --skills-only      # Execution skills only (skip zstack)
+bash install.sh --operational-only # 10 operational skills only
+bash install.sh --product-only     # 11 product skills only
+bash install.sh --help             # Show all options
 ```
 
 ### Configure MCP
@@ -54,6 +68,13 @@ For a new tenant, use the onboarding flow:
 ```
 
 This chains: setup -> discover -> audit -> snapshot — giving you a complete picture of your tenant in one command.
+
+### Typical Workflow
+
+1. **Plan** with zstack: `/zia-ssl` designs your SSL inspection (CA model, bypass list, compliance mapping)
+2. **Execute** with bridge: `/zscaler-bridge` translates the design into MCP API calls
+3. **Validate**: `/zscaler-audit` runs 22 security checks post-deployment
+4. **Backup**: `/zscaler-snapshot` captures the new config state
 
 ## Skills
 
@@ -165,30 +186,16 @@ User types /zscaler "list all DLP rules"
 
 The router (`/zscaler`) detects which product is relevant and loads the right skill. You can also invoke product skills directly if you know which product you need.
 
-### Using with zstack (Planning + Execution)
+### zstack Integration
 
-This project works alongside [zstack](https://github.com/pganti/zstack) for a complete plan-to-execute workflow:
+[zstack](https://github.com/pganti/zstack) is automatically installed by `bash install.sh` (skip with `--skills-only`). It provides 91 planning/design skills from Zscaler Professional Services:
 
-```
- zstack (91 skills)              zscaler-claude-skills (21 skills)
- ┌─────────────────┐             ┌─────────────────────┐
- │ /zia-ssl         │──design──>│ /zscaler-bridge      │──execute──> Zscaler API
- │ /migrate-palo    │           │ /zscaler-migrate     │
- │ /ps-scoping      │           │ /zscaler-deploy      │
- │ /dlp-design      │           │ /zscaler-audit       │
- └─────────────────┘             └─────────────────────┘
-   WHAT to build                   HOW to execute
-```
+- **PS lifecycle**: scoping, SOWs, proposals, kickoff, handoff
+- **Product design**: SSL inspection, DLP policies, ZPA segments, ZTB architecture
+- **Competitive migration**: Palo Alto, Check Point, Netskope, Cisco, Symantec, Forcepoint playbooks
+- **Knowledge base**: RAG-powered best practices Q&A
 
-Install both:
-```bash
-# zstack (planning/design skills)
-git clone https://github.com/pganti/zstack ~/.claude/skills/zstack
-
-# zscaler-claude-skills (execution skills)
-git clone https://github.com/secsilab/zscaler-claude-skills.git
-cd zscaler-claude-skills && bash install.sh
-```
+zstack designs **what** to build; this project executes **how** via API.
 
 ## Tools
 
