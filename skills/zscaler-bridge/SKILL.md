@@ -1,5 +1,6 @@
 ---
 name: zscaler-bridge
+version: 1.0.0
 description: Use when translating a Zscaler design document (from zstack or manual planning) into executable API calls. Takes architecture docs, policy matrices, or deployment plans and maps them to MCP tool sequences.
 ---
 

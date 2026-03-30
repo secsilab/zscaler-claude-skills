@@ -1,5 +1,6 @@
 ---
 name: zscaler-deploy
+version: 1.0.0
 description: Use when deploying new applications, servers, locations, sites, DLP policies, or partner access in Zscaler. Pre-built deployment templates with interactive prompts.
 ---
 

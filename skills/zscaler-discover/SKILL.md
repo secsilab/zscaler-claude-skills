@@ -1,5 +1,6 @@
 ---
 name: zscaler-discover
+version: 1.0.0
 description: Use when you need a full inventory of the Zscaler tenant, when starting work on a new tenant, or when memory/zscaler-tenant.md is missing or outdated.
 ---
 

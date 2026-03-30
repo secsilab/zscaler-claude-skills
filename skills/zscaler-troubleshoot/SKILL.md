@@ -1,5 +1,6 @@
 ---
 name: zscaler-troubleshoot
+version: 1.0.0
 description: Use when diagnosing Zscaler connectivity issues, access problems, blocked websites, DNS failures, performance degradation, or ZTB gateway issues. Interactive diagnostic wizard.
 ---
 

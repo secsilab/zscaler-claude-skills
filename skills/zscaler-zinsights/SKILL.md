@@ -1,5 +1,6 @@
 ---
 name: zscaler-zinsights
+version: 1.0.0
 description: Use when querying Zscaler analytics — web traffic, firewall stats, cyber incidents, shadow IT, IoT devices, CASB reports, threat intelligence.
 ---
 

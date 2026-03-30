@@ -1,5 +1,7 @@
 ---
 name: zscaler-ztb
+version: 1.1.0
+postman_revision: 2026-03-30
 description: Use when working with ZTB (Zero Trust Branch) — AirGap API for sites, gateways, VLANs, PBR, VRRP, IPsec, GRE, WireGuard, IPAM, SNMP, device posture, remote isolation, BGP, OSPF, templates, integrations.
 ---
 

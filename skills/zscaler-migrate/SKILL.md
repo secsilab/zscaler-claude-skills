@@ -1,5 +1,6 @@
 ---
 name: zscaler-migrate
+version: 1.0.0
 description: Use when migrating from a competitor product to Zscaler — assessment, vendor-specific policy translation, phased cutover with API execution. Supports Palo Alto, Check Point, Netskope, Cisco, Symantec, Forcepoint.
 ---
 

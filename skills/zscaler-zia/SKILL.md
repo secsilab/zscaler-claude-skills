@@ -1,5 +1,7 @@
 ---
 name: zscaler-zia
+version: 1.1.0
+postman_revision: 2026-03-30
 description: Use when working with ZIA — firewall rules, URL filtering, DLP policies, SSL inspection, cloud apps, locations, GRE tunnels, sandbox, ATP, bandwidth, DNS control, forwarding, NAT, PAC files, admin audit logs, traffic management.
 ---
 

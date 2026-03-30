@@ -1,5 +1,7 @@
 ---
 name: zscaler-easm
+version: 1.0.0
+postman_revision: 2026-03-30
 description: Use when working with ZEASM (External Attack Surface Management) — findings, lookalike domains, organization discovery.
 ---
 

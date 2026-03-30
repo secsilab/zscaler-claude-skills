@@ -1,5 +1,6 @@
 ---
 name: zscaler-onboard
+version: 1.0.0
 description: Use when onboarding a new Zscaler tenant from scratch, when a colleague starts using the Zscaler skills for the first time, or when setting up a fresh project with Zscaler integration. Chains setup, discover, audit, and snapshot into a single flow.
 ---
 

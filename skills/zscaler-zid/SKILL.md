@@ -1,5 +1,7 @@
 ---
 name: zscaler-zid
+version: 1.0.0
+postman_revision: 2026-03-30
 description: Use when working with ZIdentity — user management, group management, API clients, resource servers, directory sync.
 ---
 
