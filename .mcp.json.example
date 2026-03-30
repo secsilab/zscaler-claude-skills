@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "zscaler": {
+      "command": "zscaler-mcp",
+      "args": ["--enable-write-tools", "--write-tools", "*"],
+      "env": {
+        "ZSCALER_CLIENT_ID": "<your-client-id>",
+        "ZSCALER_CLIENT_SECRET": "<your-client-secret>",
+        "ZSCALER_CUSTOMER_ID": "<your-customer-id>",
+        "ZSCALER_VANITY_DOMAIN": "<your-vanity-domain>"
+      }
+    }
+  }
+}
