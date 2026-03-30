@@ -995,6 +995,68 @@ After any ZIA create/update/delete, call `zia_activate_configuration` (MCP) or `
 9. **Location profiles**: SERVER profiles don't inspect DNS. Use CORPORATE for full DNS inspection and logging.
 10. **WebSocket/AI apps**: ZIA cannot inspect WebSocket content to distinguish chat vs file upload (e.g., Manus uses socket.io for both).
 
+## Field Gotchas (Deployment Experience)
+
+### SSL Inspection
+
+**Three CA Models — Pick One Before Go-Live:**
+
+| Model | Pros | Cons | Best For |
+|-------|------|------|----------|
+| Zscaler CA (default) | Zero deployment burden, auto-lifecycle | Cert pinning breaks (Slack, Teams), users see Zscaler CA | Fast deployments, low compliance |
+| Custom Sub-CA | Customer controls CA, fewer pinning issues | CSR/key management, 3-year renewal burden | HIPAA, PCI environments |
+| BYOK | FIPS 140-2 compliant, DoD acceptable | Complex setup (8-12 weeks), HSM cost | DoD DFARS, sovereign |
+
+**SSL Bypass List (CRITICAL — No bypass = 10,000 false alerts/day):**
+- **Always bypass:** Banks (cert pinning breaks login), Healthcare (`*.mychart.org`, `*.epic.com`), APIs (`github.com`, `stripe.com`, `webhook.slack.com`), SaaS pinners (Slack desktop, Teams desktop)
+- **Bypass by category:** Financial services, healthcare portals, P2P/torrents
+- **Never bypass:** Streaming (want bandwidth throttle visibility), social media (DLP inspection needed)
+- **Rule of thumb:** Start with 80% traffic inspected, bypass risky 20%. Gradually expand. Overreach = user circumvention via personal VPN.
+
+**Compliance Mapping for SSL Inspection:**
+- **HIPAA:** Permitted with conditions — must use customer CA (Model 2/3), audit log all access
+- **PCI-DSS:** Permitted — must NOT inspect payment card data; whitelist payment processors
+- **GDPR:** Not illegal in EU, but must disclose interception to users (use customer CA for comfort)
+- **DoD DFARS:** BYOK (Model 3) only acceptable
+
+### DLP Deployment
+
+**Phased Rollout (Don't Skip Phases):**
+1. **Week 1-4:** Audit mode (no blocking) — establish false positive baseline
+2. **Week 5-8:** Caution mode (warnings + user coaching) — measure user compliance
+3. **Week 9+:** Selective block — start with high-confidence patterns only (exact PII, credit cards)
+- **Success metrics per phase:** False positive rate <0.5%, block rate <2% of traffic, user complaints <0.1%
+- **Rollback trigger:** If any metric exceeds 3x threshold, revert to previous phase
+
+**EDM (Exact Data Match) Gotchas:**
+- EDM matches are "all or nothing" — partial field matches fail if formatting differs (spaces, dashes). **Always implement field normalization.**
+- Hash uploads expose sensitive data during transfer — use encrypted SFTP with certificate pinning
+- Index refresh windows create detection gaps — records added between refreshes go undetected until next cycle
+- High-cardinality fields (emails) with EDM + pattern matching = duplicate detections. Implement correlation logic.
+- Multi-field EDM requires ALL fields to match exactly — one field sanitized differently = silent miss
+
+**Regex Safety:**
+- Complex DLP regex patterns can cause exponential matching (ReDoS). Audit pattern complexity before deploying.
+- Credit card regex must reject test numbers (`4111-1111-1111-1111`)
+
+### Policy Design
+
+**Rule Evaluation Order (Recommended):**
+1. Block Malware/C&C (non-negotiable, top of policy)
+2. Block High-Risk Countries (geo-blocking)
+3. Block P2P/Torrents (bandwidth protection)
+4. Allow Business Critical (Salesforce, Box, O365)
+5. Caution Social Media (coaching page)
+6. Block News/Entertainment (or throttle)
+7. Default action (Block recommended)
+
+**Common Policy Mistakes:**
+- Overly broad allow rules kill entire policy stack
+- No exceptions process → endless "Can I allow YouTube?" requests
+- Not logging → can't prove compliance or troubleshoot
+- Dynamic categorization disabled → stale URL definitions
+- Bandwidth throttling too aggressive → users circumvent via personal VPN
+
 ## Location Profiles
 
 | Profile | DNS Inspection | Web Inspection | Use Case |

@@ -677,6 +677,53 @@ If anything goes wrong during deployment, rollback in reverse order:
 
 Always compare current state against the pre-deployment snapshot to ensure clean rollback.
 
+## Cutover Best Practices
+
+When any deployment involves production traffic migration (location cutover, ZCC rollout, ZTB site activation), follow this framework.
+
+### Pre-Cutover Timeline
+
+| When | Action |
+|------|--------|
+| T-5 days | Confirm pilot phase complete (5-10% users, 1-2 weeks, no issues) |
+| T-3 days | Send user communication (cutover date, expected downtime, support contacts) |
+| T-2 days | Final validation — sample traffic through new config vs legacy |
+| T-1 day | Stage config changes (NOT activated), verify monitoring dashboards live |
+| T-0 | Go/no-go decision at war room |
+
+### Staggered Rollout
+
+**Never big-bang production.** Stagger all changes:
+- Network/BGP: Activate, monitor convergence (30-60s), decision checkpoint at 2 min
+- Policy rules: Activate, monitor hit rate, spot-check blocking. Checkpoint if >5% unexpected blocks.
+- Client rollout (ZCC/MDM): Push 20% of devices per 5 min. Pause if install failure >20%.
+- Legacy removal: Push removal 20% per 10 min. Pause if uninstall failure >10%.
+
+### Rollback Triggers (Immediate Rollback)
+
+- Critical app down (O365, Salesforce, VoIP)
+- >20% of users unable to connect
+- Policy enforcement broken (all allowed OR all blocked)
+- Zscaler cloud unreachable
+- Performance <50% of baseline
+
+### War Room Roles
+
+| Role | Responsibility |
+|------|----------------|
+| **Cutover Lead** | Timeline ownership, go/no-go decisions, escalation authority |
+| **Infrastructure Lead** | Network config, MDM rollout, legacy removal |
+| **Security Lead** | Policy enforcement monitoring, anomaly detection, false positive triage |
+| **Application Lead** | App connectivity testing, user report monitoring |
+| **Scribe** | Log all decisions, timestamps, outcomes for post-mortem |
+
+### Success Criteria (4 Phases)
+
+1. **T+0 to T+30 min:** Routes converge <2 min, >95% traffic routed, policies enforcing
+2. **T+30 min to T+2h:** Client rollout >95%, legacy uninstall >95%, zero conflicts
+3. **T+2h to T+4h:** Apps accessible, latency within 20% of baseline, DLP functional
+4. **T+4h to T+24h:** >90% user satisfaction, 99%+ device migration, no critical incidents
+
 ## Common Mistakes
 
 1. **Forgetting ZIA activation** — ZIA writes are staged until activated
