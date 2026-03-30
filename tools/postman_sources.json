@@ -1,0 +1,40 @@
+{
+  "collections": {
+    "oneapi": {
+      "uid": "43028424-f276a17d-1778-46a9-8c61-ac3ef1d79de8",
+      "url": "https://www.postman.com/collections/43028424-f276a17d-1778-46a9-8c61-ac3ef1d79de8",
+      "metadata_url": "https://www.postman.com/_api/collection/43028424-f276a17d-1778-46a9-8c61-ac3ef1d79de8",
+      "last_updated": "2026-03-05",
+      "product_folders": {
+        "Zscaler Internet Access (ZIA)": "zscaler-zia",
+        "Zscaler Private Access (ZPA)": "zscaler-zpa",
+        "Zscaler Cloud & Branch Connector (ZCBC)": "zscaler-zcbc",
+        "Zscaler Digital Experience (ZDX)": "zscaler-zdx",
+        "Zscaler Client Connector (ZCC)": "zscaler-zcc",
+        "ZIdentity (ZID)": "zscaler-zid",
+        "EASM": "zscaler-easm"
+      }
+    },
+    "ztb": {
+      "uid": "43028424-f74b4e07-08e1-4744-8d55-e64b0de87d0f",
+      "url": "https://www.postman.com/collections/43028424-f74b4e07-08e1-4744-8d55-e64b0de87d0f",
+      "metadata_url": "https://www.postman.com/_api/collection/43028424-f74b4e07-08e1-4744-8d55-e64b0de87d0f",
+      "last_updated": "2026-02-26",
+      "skill": "zscaler-ztb"
+    },
+    "zwa": {
+      "uid": "43028424-bfb895d7-5865-4586-8907-6bdc2bd222e5",
+      "url": "https://www.postman.com/collections/43028424-bfb895d7-5865-4586-8907-6bdc2bd222e5",
+      "metadata_url": "https://www.postman.com/_api/collection/43028424-bfb895d7-5865-4586-8907-6bdc2bd222e5",
+      "last_updated": "2025-06-13",
+      "skill": "zscaler-zwa"
+    },
+    "aiguard": {
+      "uid": "43028424-c00ef572-af61-410e-bdbd-ab84ea34d599",
+      "url": "https://www.postman.com/collections/43028424-c00ef572-af61-410e-bdbd-ab84ea34d599",
+      "metadata_url": "https://www.postman.com/_api/collection/43028424-c00ef572-af61-410e-bdbd-ab84ea34d599",
+      "last_updated": "2026-02-26",
+      "skill": "zscaler-aiguard"
+    }
+  }
+}
