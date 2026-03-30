@@ -934,3 +934,61 @@ Always prefer `SCIM_GROUP` over individual SCIM attributes — groups scale bett
 4. **Rule order matters** — top-to-bottom, first match wins. New rules go to bottom — always reorder
 5. **Verify SCIM identity** before modifying rules — displayname may differ from loginname
 6. **No activation needed** — ZPA changes take effect immediately (unlike ZIA)
+
+## Field Gotchas (Deployment Experience)
+
+### Connector Sizing & Placement
+
+**Sizing Rules (Field-Proven):**
+- 1 connector per 500 concurrent users
+- Max 2,500 users per HA pair
+- Baseline: 4 vCPU, 8GB RAM
+- High load (2,500+ users): 8 vCPU, 16GB RAM
+- Minimum 20GB free on `/var` — logs fill fast, rotate daily
+
+**Connector Group Scope:**
+- One group per logical boundary (DC / cloud region)
+- **Never mix DC + cloud in same group** — latency penalties from cross-region traffic
+- Each group = failover domain = same policy evaluation point
+
+**HA Pair Gotchas:**
+- Active-passive recommended (simpler); active-active requires same subnet
+- Connectors must have independent power, network, disk to avoid cascading failure
+- Health check: every 30s, >60s disconnection triggers failover
+- **License expiration silently stops forwarding** — no error, just dropped traffic
+
+**Network Requirements:**
+- Outbound TCP/UDP 443 only — NO inbound ports
+- Whitelist ZPA broker IP **ranges**, not individual IPs (they rotate weekly)
+- CIDR overlap between app segment servers and connector traffic CIDR causes routing loops
+
+### App Segment Design
+
+**FQDN vs IP Decision Matrix:**
+
+| Use Case | FQDN vs IP | Double-Encrypt | Server Group |
+|----------|-----------|----------------|--------------|
+| Kubernetes/cloud | FQDN wildcard | Yes if sensitive | 10+ with health probe |
+| Legacy Windows | IP static | No | 2-4 manual failover |
+| Database (PII) | IP + FQDN | **Yes (mandatory)** | 3-5 with priority |
+| API gateway | FQDN exact | Yes if auth critical | 5+ active-active |
+
+**Segment Gotchas:**
+- FQDN resolution happens on **connector**, not user device. If connector can't resolve → segment fails silently.
+- Exact FQDN takes precedence over wildcard — create exact for critical apps, wildcard for catch-all
+- Double-encrypt adds latency — measure before enforcing for high-frequency apps
+- Server group health probes disabled by default — **enable for production** (TCP/HTTP, 30s interval)
+- Port mismatch: app listens 8080 internally, segment publishes 443 → must match exactly
+
+### Identity & Access
+
+**SCIM Sync Gotchas:**
+- SCIM changes propagate in 1-4 hours. For urgent access changes, use manual override.
+- **Group name casing matters:** "Engineering" ≠ "engineering" — validate exact case from IdP
+- Posture checks evaluated every login. Stale posture from old session can block legitimate access.
+- Some posture check modules fail-open on crash (allow access). **Verify fail-closed behavior.**
+
+**Policy Rule Gotchas:**
+- First-matching rule wins. Contradictory rules fail silently — the first one matched applies.
+- Bypass rules inherit all previous rules. Narrow bypass scope to specific segments only.
+- Policy grants access but servers not in connector group = connection timeout, no clear error

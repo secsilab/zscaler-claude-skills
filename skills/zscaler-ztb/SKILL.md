@@ -1124,3 +1124,34 @@ result = json.loads(urllib.request.urlopen(req, context=ctx).read())
 5. **PBR endpoints require `?gateway_id=`** query parameter -- calls without it will fail
 6. **v2 vs v3 migration** -- some endpoints moved from v2 to v3 (PBR, VRRP, devices, BGP, OSPF); if one version returns 404, try the other
 7. **Cloud Connector API** is a separate API at `connector.<cloud>.net/api/v1` -- not covered here
+
+## Field Gotchas (Deployment Experience)
+
+### Hardware Cutover
+
+**ZTP Enrollment:**
+- If ZTP enrollment fails, device falls back to default config (not previous config). **Verify DNS resolution to bootstrap server before starting.**
+- Cable swap without failover setup = full site outage. **Always have HA secondary ready first.**
+- Cutover window: 2-3 hours for large branch (100+ VLANs). Schedule during maintenance window.
+
+**Network Gotchas:**
+- **MTU mismatch** — ZTB defaults 1500, upstream may be 1480 = tunnel fragmentation = throughput degradation. Validate end-to-end MTU.
+- **SVI IP reuse** — Old firewall still active during cutover = duplicate IP = ARP storms. Use temporary IPs or strict failover sequence.
+- **BGP convergence delay** — New routes not immediately used after cutover. May need BGP flap or route cache clear.
+- **VLAN trunking misconfiguration** — Some VLANs missing on ZTB after cutover. Always verify with `show vlan` output.
+- **Licensing** — ZTP assigns default throughput tier. Manual license upgrade needed for higher speeds. Check post-enrollment.
+
+### Rollback
+
+**Mid-cutover failure = routing asymmetry = packet loss.** Plan hard rollback to old firewall, not soft revert:
+1. Revert BGP metrics to old firewall priority
+2. Restore old firewall config
+3. Verify all VLANs restored
+4. Document root cause before re-attempting
+
+### Device Segmentation
+
+**IoT/OT Gotchas:**
+- VLAN-based segmentation is static — dynamic devices (printers, cameras) need profiling rules
+- PBR requires `?gateway_id=` on ALL endpoints — this applies to segmentation rules too
+- Transparent DNS proxy intercepts port 53 before PBR — IoT devices using custom DNS resolvers will be intercepted
