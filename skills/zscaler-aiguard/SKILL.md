@@ -66,3 +66,7 @@ User / App → [AI Gateway (routing + auth)] → [AI Guard (content inspection)]
 ```
 
 When building integrations, prefer the AI Gateway + AI Guard combination for complete visibility. The n8n node and NeMo integration are for custom pipeline insertion where AI Gateway cannot intercept traffic natively.
+
+## MCP Server
+
+Live detection API calls for AI Guard are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server). No dedicated MCP tools exist for AI Guard yet — use direct Bearer token calls to the detection API. See the MCP server repository for any newly added AI Guard tools.

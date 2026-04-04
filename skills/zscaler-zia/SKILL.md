@@ -341,3 +341,7 @@ Export the full ZIA policy configuration as a structured snapshot for backup or 
 |-----------|----------|
 | Export all policies | `GET /policyExport` |
 | Export by type | `GET /policyExport?policyType=<type>` |
+
+## MCP Server
+
+Live CRUD operations for ZIA are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server). This skill provides workflow guidance and field gotchas; the MCP server executes the actual API calls via `zia_*` tools. See the MCP server repository for the full list of available tools and required parameters.

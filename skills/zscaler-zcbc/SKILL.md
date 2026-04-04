@@ -43,3 +43,7 @@ ZCBC is being rebranded as **ZTC (Zero Trust Cloud)** in newer Zscaler tooling a
 **Terraform provider:** The Terraform provider for ZCBC/ZTC is now published as `terraform-provider-ztc`. If you see references to `terraform-provider-zcbc`, they point to the same product but use the legacy name. Use `terraform-provider-ztc` for new Terraform work.
 
 **SDK alias:** In the Zscaler Python and Go SDKs, the ZCBC module is named `ztw`. When referencing SDK documentation or source code, search for `ztw` rather than `zcbc`.
+
+## MCP Server
+
+Live CRUD operations for ZCBC are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server). No dedicated `zcbc_*` MCP tools exist yet — use direct OneAPI calls to `https://api.zsapi.net/zcbc/api/v1`. See the MCP server repository for any newly added ZCBC tools.

@@ -160,6 +160,10 @@ Entitlements control which ZCC features are licensed and available to users.
 - MCP tools are read-only (4 tools)
 - Write operations (create/update forwarding profiles) require direct API calls
 
+## MCP Server
+
+Live read operations for ZCC are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server) (`zcc_*` tools). Write operations and the extended module coverage documented above require direct OneAPI calls. See the MCP server repository for available tools and parameters.
+
 ## Field Gotchas (Deployment Experience)
 
 ### Z-Tunnel Version

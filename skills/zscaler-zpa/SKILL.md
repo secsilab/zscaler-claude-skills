@@ -358,3 +358,7 @@ ZPA supports tagging application servers and connectors with workload metadata (
 | Managed via | @zscaler-zpa | @zscaler-zms |
 
 For full microsegmentation lifecycle (agent deployment, resource groups, policy rules, app zones), use @zscaler-zms.
+
+## MCP Server
+
+Live CRUD operations for ZPA are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server). This skill provides workflow guidance and field gotchas; the MCP server executes the actual API calls via `zpa_*` tools. See the MCP server repository for the full list of available tools and required parameters.

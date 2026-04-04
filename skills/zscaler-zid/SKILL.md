@@ -1,6 +1,6 @@
 ---
 name: zscaler-zid
-version: 1.0.0
+version: 1.1.0
 postman_revision: 2026-03-30
 description: Use when working with ZIdentity — user management, group management, API clients, resource servers, directory sync.
 ---
@@ -27,3 +27,7 @@ OneAPI OAuth2. Base URL: `https://api.zsapi.net/zidentity/api/v1`
 ## Known Limitations
 - MCP tools are read-only — write operations (create/update/delete users/groups) require Python SDK or direct API
 - User write operations need `zidentity.users.manage` scope
+
+## MCP Server
+
+Live read operations for ZIdentity are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server) (`zid_*` tools). Write operations require the Python SDK (`ZIdentityService`). See the MCP server repository for available read tools and parameters.
