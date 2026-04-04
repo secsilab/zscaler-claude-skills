@@ -1,8 +1,8 @@
 ---
 name: zscaler-zia
-version: 1.1.0
+version: 1.2.0
 postman_revision: 2026-03-30
-description: Use when working with ZIA — firewall rules, URL filtering, DLP policies, SSL inspection, cloud apps, locations, GRE tunnels, sandbox, ATP, bandwidth, DNS control, forwarding, NAT, PAC files, admin audit logs, traffic management.
+description: Use when working with ZIA — firewall rules, URL filtering, DLP policies, SSL inspection, cloud apps, locations, GRE tunnels, sandbox, ATP, bandwidth, DNS control, forwarding, NAT, PAC files, admin audit logs, traffic management, AppTotal, Cloud NSS, VZEN, shadow IT, IoT, traffic capture, policy export.
 ---
 
 # Zscaler Internet Access (ZIA)
@@ -251,3 +251,93 @@ After any ZIA create/update/delete, call `zia_activate_configuration` (MCP) or `
 | **SERVER** | Minimal (no DNS proxy) | Limited | Server workloads, automated traffic |
 | **WORKLOAD** | Via Branch Connector | Via Branch Connector | Cloud/ZTB workloads |
 | **EXTRANET** | Extranet-specific | Extranet | Partner/extranet traffic |
+
+## Advanced Services (SDK-Available, MCP Gaps)
+
+These services are available via the ZIA API and SDK but are not yet exposed through MCP tools. Use OneAPI direct calls for all of them.
+
+### AppTotal
+
+AppTotal provides deep inspection and risk scoring for cloud applications beyond standard CASB categories. Use it to get risk metadata for specific apps and inform cloud app control policy.
+
+| Operation | Endpoint |
+|-----------|----------|
+| Get app report | `GET /appTotal/report?appUrl=<url>` |
+| Get app review | `GET /appTotal/review?appUrl=<url>` |
+
+### Cloud NSS (Network Security Service)
+
+Cloud NSS streams ZIA logs to external SIEMs and SOC platforms without requiring on-premises NSS appliances.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List NSS feeds | `GET /cloudNssFeeds` |
+| Get NSS feed | `GET /cloudNssFeeds/{id}` |
+| Create NSS feed | `POST /cloudNssFeeds` |
+| Update NSS feed | `PUT /cloudNssFeeds/{id}` |
+| Delete NSS feed | `DELETE /cloudNssFeeds/{id}` |
+| List NSS servers | `GET /nssServers` |
+
+Supported output formats: CEF, LEEF, JSON. Supported destinations: Splunk, QRadar, Azure Sentinel, generic syslog.
+
+### VZEN Clusters and Nodes (Virtual ZEN)
+
+VZEN (Virtual ZEN / `virtualZenClusters`, `virtualZenNodes`) allows deploying Zscaler enforcement nodes in private or sovereign cloud environments.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List VZEN clusters | `GET /virtualZenClusters` |
+| Get VZEN cluster | `GET /virtualZenClusters/{id}` |
+| Create VZEN cluster | `POST /virtualZenClusters` |
+| List VZEN nodes | `GET /virtualZenNodes` |
+| Get VZEN node | `GET /virtualZenNodes/{id}` |
+
+Use VZEN for government or regulated environments where traffic cannot egress to Zscaler's public cloud.
+
+### Bandwidth Control
+
+Bandwidth control throttles traffic by category, application, or user group to prevent bandwidth monopolization.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List bandwidth classes | `GET /bandwidthClasses` |
+| Create bandwidth class | `POST /bandwidthClasses` |
+| List bandwidth control rules | `GET /bandwidthControlRules` |
+| Create bandwidth control rule | `POST /bandwidthControlRules` |
+
+### IoT Report
+
+IoT report provides visibility into IoT device traffic patterns and risk.
+
+| Operation | Endpoint |
+|-----------|----------|
+| Get IoT report | `GET /iotReport` |
+
+### Shadow IT Report
+
+Shadow IT discovery report surfaces unauthorized cloud app usage across the tenant.
+
+| Operation | Endpoint |
+|-----------|----------|
+| Get shadow IT report | `GET /shadowIT/applications` |
+| Export shadow IT CSV | `GET /shadowIT/applications/export` |
+
+### Traffic Capture
+
+Traffic capture rules define packet capture triggers for diagnostic and forensic purposes.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List capture rules | `GET /trafficCaptureRules` |
+| Create capture rule | `POST /trafficCaptureRules` |
+| Update capture rule | `PUT /trafficCaptureRules/{id}` |
+| Delete capture rule | `DELETE /trafficCaptureRules/{id}` |
+
+### Policy Export
+
+Export the full ZIA policy configuration as a structured snapshot for backup or audit.
+
+| Operation | Endpoint |
+|-----------|----------|
+| Export all policies | `GET /policyExport` |
+| Export by type | `GET /policyExport?policyType=<type>` |

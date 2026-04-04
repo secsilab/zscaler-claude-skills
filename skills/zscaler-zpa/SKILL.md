@@ -1,8 +1,8 @@
 ---
 name: zscaler-zpa
-version: 1.1.0
+version: 1.2.0
 postman_revision: 2026-03-30
-description: Use when working with ZPA — application segments, access policies, PRA/BA, connectors, service edges, segment groups, server groups, SCIM, LSS, isolation, certificates, microtenants, tags.
+description: Use when working with ZPA — application segments, access/forwarding/timeout/isolation policies, PRA, BA, connectors, service edges, segment groups, server groups, SCIM, LSS, isolation, certificates, microtenants, tags, microsegmentation.
 ---
 
 # Zscaler Private Access (ZPA)
@@ -327,3 +327,34 @@ Always prefer `SCIM_GROUP` over individual SCIM attributes — groups scale bett
 - First-matching rule wins. Contradictory rules fail silently — the first one matched applies.
 - Bypass rules inherit all previous rules. Narrow bypass scope to specific segments only.
 - Policy grants access but servers not in connector group = connection timeout, no clear error
+
+## Microsegmentation and Related Capabilities
+
+### ZPA and Microsegmentation
+
+ZPA provides identity-based access to applications (north-south: user to app). For workload-to-workload east-west traffic control, use **Zscaler Microsegmentation (ZMS)** — see @zscaler-zms for dedicated management.
+
+ZPA has several capabilities that complement or overlap with microsegmentation:
+
+**Policy V2 Controller**
+The ZPA Policy V2 engine supports more granular rule conditions including workload tags, posture signals, and step-up authentication. When building access rules for workloads (not just users), prefer Policy V2 constructs for better expressiveness.
+
+**Extranet Resources**
+ZPA can expose resources to external partners and contractors without requiring full network connectivity. Extranet segments are standard application segments with restricted identity conditions — use SAML/SCIM attributes to scope access to partner IdPs.
+
+**Browser Protection (Cloud Browser Isolation)**
+CBI wraps ZPA-accessed applications in an isolated browser session. This is distinct from microsegmentation but serves a similar containment goal: even if a user session is compromised, the application's data plane is protected by CBI's air-gap rendering.
+
+**Workload Tag Groups**
+ZPA supports tagging application servers and connectors with workload metadata (environment, tier, data classification). Workload tags enable policy rules to dynamically scope access based on infrastructure labels rather than static IPs — bridging ZPA policy with cloud workload identity.
+
+### Relationship to ZMS
+
+| Dimension | ZPA | ZMS |
+|-----------|-----|-----|
+| Traffic direction | North-south (user → app) | East-west (workload → workload) |
+| Identity anchor | User identity (SAML/SCIM) | Workload identity (agent + nonce) |
+| Policy granularity | App segment + user group | Resource group + port/protocol |
+| Managed via | @zscaler-zpa | @zscaler-zms |
+
+For full microsegmentation lifecycle (agent deployment, resource groups, policy rules, app zones), use @zscaler-zms.
