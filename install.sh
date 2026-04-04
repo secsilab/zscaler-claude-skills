@@ -22,7 +22,7 @@ echo "[OK] Claude Code found"
 
 # All skills to install
 OPERATIONAL="zscaler zscaler-setup zscaler-onboard zscaler-discover zscaler-audit zscaler-troubleshoot zscaler-snapshot zscaler-deploy zscaler-migrate zscaler-bridge"
-PRODUCT="zscaler-zia zscaler-zpa zscaler-ztb zscaler-zcbc zscaler-zcc zscaler-zdx zscaler-zid zscaler-easm zscaler-zwa zscaler-aiguard zscaler-zinsights"
+PRODUCT="zscaler-zia zscaler-zpa zscaler-ztb zscaler-zcbc zscaler-zcc zscaler-zdx zscaler-zid zscaler-easm zscaler-zwa zscaler-aiguard zscaler-zinsights zscaler-zms zscaler-zbi zscaler-terraformer"
 
 ALL_SKILLS="$OPERATIONAL $PRODUCT"
 
@@ -48,10 +48,10 @@ for arg in "$@"; do
             echo "Usage: bash install.sh [OPTIONS]"
             echo ""
             echo "Options:"
-            echo "  (default)            Install all 21 execution skills + zstack (91 planning skills)"
+            echo "  (default)            Install all 24 execution skills + zstack (91 planning skills)"
             echo "  --skills-only        Install execution skills only (skip zstack)"
             echo "  --operational-only   Install 10 operational skills only"
-            echo "  --product-only       Install 11 product skills only"
+            echo "  --product-only       Install 14 product skills only"
             echo "  --help, -h           Show this help"
             echo ""
             echo "By default, the installer also clones zstack (PS planning/design skills)"
@@ -64,7 +64,7 @@ done
 if [ -n "$SKILL_MODE" ]; then
     echo "[*] Installing $SKILL_MODE skills only"
 else
-    echo "[*] Installing all 21 execution skills"
+    echo "[*] Installing all 24 execution skills"
 fi
 
 echo ""
@@ -146,6 +146,7 @@ echo "Product skills (loaded automatically by the router):"
 echo "  /zscaler-zia   /zscaler-zpa   /zscaler-ztb   /zscaler-zcbc"
 echo "  /zscaler-zcc   /zscaler-zdx   /zscaler-zid   /zscaler-easm"
 echo "  /zscaler-zwa   /zscaler-aiguard /zscaler-zinsights"
+echo "  /zscaler-zms   /zscaler-zbi   /zscaler-terraformer"
 echo ""
 echo "Next steps:"
 echo "  1. Open Claude Code in your project directory"

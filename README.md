@@ -1,6 +1,6 @@
 # Zscaler Skills Suite for Claude Code
 
-112 skills for Zscaler — plan with [zstack](https://github.com/pganti/zstack), execute with API. **1,677 endpoints** covered.
+115 skills for Zscaler — plan with [zstack](https://github.com/pganti/zstack), execute with API. **1,677 endpoints** covered.
 
 ## Install
 
@@ -10,7 +10,7 @@ cd zscaler-claude-skills
 bash install.sh
 ```
 
-This installs 21 execution skills + 91 planning skills ([zstack](https://github.com/pganti/zstack)). Use `--skills-only` to skip zstack.
+This installs 24 execution skills + 91 planning skills ([zstack](https://github.com/pganti/zstack)). Use `--skills-only` to skip zstack.
 
 **Prerequisites:** [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Zscaler MCP Server](https://github.com/zscaler/zscaler-mcp) (`uv tool install zscaler-mcp`), API credentials.
 
@@ -27,7 +27,7 @@ This installs 21 execution skills + 91 planning skills ([zstack](https://github.
 3. `/zscaler-audit` — validate with 22 security checks
 4. `/zscaler-snapshot` — backup the config
 
-## Execution Skills (21)
+## Execution Skills (24)
 
 ### Operational (10)
 
@@ -44,23 +44,26 @@ This installs 21 execution skills + 91 planning skills ([zstack](https://github.
 | `/zscaler-migrate` | Competitive migration — 6 vendor playbooks + API execution |
 | `/zscaler-bridge` | Translate design docs into API call sequences |
 
-### Product (11)
+### Product (14)
 
-Loaded automatically by the router. Each skill has a `SKILL.md` (human-written expertise) and an `ENDPOINTS.md` (auto-generated API reference).
+Loaded automatically by the router. Each skill has a `SKILL.md` (human-written expertise) and, where available, an `ENDPOINTS.md` (auto-generated API reference).
 
 | Command | Endpoints | Covers |
 |---------|-----------|--------|
 | `/zscaler-zia` | 428 | Firewall, URL filtering, DLP, SSL, cloud apps, locations, GRE, sandbox |
 | `/zscaler-zpa` | 328 | App segments, access policies, PRA/BA, connectors, SCIM, isolation |
 | `/zscaler-ztb` | 674 | Sites, gateways, VLANs, PBR, VRRP, IPsec, GRE, WireGuard, BGP, OSPF |
-| `/zscaler-zcbc` | 97 | Cloud & Branch Connector — partner integrations, connector groups |
-| `/zscaler-zcc` | 33 | Client Connector — devices, forwarding profiles, enrollment |
+| `/zscaler-zcbc` | 97 | Cloud & Branch Connector — partner integrations, connector groups (also ZTC/ZTW) |
+| `/zscaler-zcc` | 33 | Client Connector — devices, forwarding profiles, web policy, entitlements |
 | `/zscaler-zdx` | 42 | Digital Experience — app monitoring, alerts, deep traces |
 | `/zscaler-zid` | 31 | ZIdentity — users, groups, API clients, directory sync |
 | `/zscaler-easm` | 7 | External Attack Surface — findings, lookalike domains |
 | `/zscaler-zwa` | 19 | Workflow Automation — DLP incidents, evidence, closure |
-| `/zscaler-aiguard` | 2 | AI/ML content detection and policy execution |
+| `/zscaler-aiguard` | 2 | AI/ML content detection, policy execution, AI Gateway, n8n, NeMo |
 | `/zscaler-zinsights` | 16 | Analytics — traffic, firewall stats, shadow IT, IoT |
+| `/zscaler-zms` | — | Microsegmentation — agents, resource groups, policy rules, app zones |
+| `/zscaler-zbi` | — | Business Insights — custom app definitions, reports |
+| `/zscaler-terraformer` | CLI | Brownfield Terraform import for ZIA, ZPA, and ZTC |
 
 ## Planning Skills (91 — zstack)
 
