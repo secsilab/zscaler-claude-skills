@@ -13,6 +13,15 @@
         "Zscaler Client Connector (ZCC)": "zscaler-zcc",
         "ZIdentity (ZID)": "zscaler-zid",
         "EASM": "zscaler-easm"
+      },
+      "overrides": {
+        "zscaler-zcc": [
+          {
+            "name": "updateZpaGroupEntitlement",
+            "path": "/v1/updateZpaGroupEntitlement",
+            "_reason": "Upstream Postman collection has the wrong path (/v1/updateZdxGroupEntitlement). Confirmed against zscaler-sdk-go zscaler/zcc/services/entitlements/entitlements.go and zscaler-sdk-python zscaler/zcc/entitlements.py."
+          }
+        ]
       }
     },
     "ztb": {
