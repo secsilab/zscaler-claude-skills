@@ -1,6 +1,6 @@
 ---
 name: zscaler-easm
-version: 1.0.0
+version: 1.1.0
 postman_revision: 2026-03-30
 description: Use when working with ZEASM (External Attack Surface Management) — findings, lookalike domains, organization discovery.
 ---
@@ -27,3 +27,7 @@ OneAPI OAuth2. Base URL: `https://api.zsapi.net/easm/api/v1`
 ## Known Limitations
 - All MCP tools are read-only
 - No remediation actions via API (manual follow-up required)
+
+## MCP Server
+
+Live read operations for EASM are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server) (`easm_*` tools). This skill provides workflow guidance and context; the MCP server executes the API calls. See the MCP server repository for the full tool list and parameters.

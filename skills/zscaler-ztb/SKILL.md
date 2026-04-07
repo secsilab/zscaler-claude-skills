@@ -1,6 +1,6 @@
 ---
 name: zscaler-ztb
-version: 1.1.0
+version: 1.2.0
 postman_revision: 2026-03-30
 description: Use when working with ZTB (Zero Trust Branch) — AirGap API for sites, gateways, VLANs, PBR, VRRP, IPsec, GRE, WireGuard, IPAM, SNMP, device posture, remote isolation, BGP, OSPF, templates, integrations.
 ---
@@ -149,3 +149,7 @@ For full API endpoint reference, see ENDPOINTS.md in this skill directory.
 - VLAN-based segmentation is static — dynamic devices (printers, cameras) need profiling rules
 - PBR requires `?gateway_id=` on ALL endpoints — this applies to segmentation rules too
 - Transparent DNS proxy intercepts port 53 before PBR — IoT devices using custom DNS resolvers will be intercepted
+
+## MCP Server
+
+Live operations for ZTB are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server). ZTB uses the AirGap API (`*.goairgap.com`) rather than OneAPI — no dedicated MCP tools exist. Use direct HTTP calls with the same OAuth2 token. See the MCP server repository for any newly added ZTB tools.

@@ -1,6 +1,6 @@
 ---
 name: zscaler-zinsights
-version: 1.0.0
+version: 1.1.0
 description: Use when querying Zscaler analytics — web traffic, firewall stats, cyber incidents, shadow IT, IoT devices, CASB reports, threat intelligence.
 ---
 
@@ -53,3 +53,7 @@ Uses OneAPI OAuth2 (same as ZIA/ZPA). No separate auth flow.
 - No Postman collection available — endpoints only accessible via MCP tools
 - Time range parameters vary by tool — check MCP tool schema
 - Data freshness depends on Zscaler cloud processing (typically 15-30 min delay)
+
+## MCP Server
+
+Live analytics queries for ZInsights are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server) (`zinsights_*` tools). This skill provides workflow guidance and context; the MCP server executes the GraphQL queries. See the MCP server repository for the full tool list and time range parameters.

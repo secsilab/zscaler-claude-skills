@@ -1,6 +1,6 @@
 ---
 name: zscaler-setup
-version: 1.0.0
+version: 1.1.0
 description: Use when setting up Zscaler MCP integration from scratch, when .mcp.json is missing, or when a colleague needs to configure their Zscaler API access. Interactive wizard that installs dependencies, collects credentials, and validates connectivity.
 ---
 
@@ -244,6 +244,47 @@ If missing, inform the user they need the `zscaler` skill for full functionality
 | `403 Forbidden` | API key lacks permissions — check ZIdentity portal |
 | `Connection refused` | Network issue — check proxy/firewall settings |
 | `.mcp.json` not picked up | Restart Claude Code (`/mcp` to check MCP server status) |
+
+## Authentication Reference
+
+### OneAPI (OAuth2) — Recommended
+
+OneAPI is the recommended authentication method for all Zscaler products (ZIA, ZPA, ZCC, ZDX, ZID, ZCBC, EASM, ZWA, AI Guard, ZInsights, ZMS, ZBI).
+
+| Field | Value |
+|-------|-------|
+| Grant type | `client_credentials` |
+| Token endpoint | `https://<vanity>.zslogin.net/oauth2/v1/token` |
+| API base | `https://api.zsapi.net/<product>/api/v1` |
+| Credentials | `ZSCALER_CLIENT_ID`, `ZSCALER_CLIENT_SECRET`, `ZSCALER_VANITY_DOMAIN` |
+
+Create API credentials in the ZIdentity portal: **Settings > API Keys**.
+
+OneAPI credentials are product-agnostic — one client ID/secret pair accesses all products your role permits.
+
+### Legacy Per-Product Auth — Fallback
+
+Some features are only accessible via the legacy API (e.g., the ZIA `receiver` field on DLP rules). Legacy auth uses per-product credentials:
+
+| Product | Credentials |
+|---------|-------------|
+| ZIA | `ZIA_USERNAME`, `ZIA_PASSWORD`, `ZIA_API_KEY`, `ZIA_CLOUD` |
+| ZPA | `ZPA_CLIENT_ID`, `ZPA_CLIENT_SECRET`, `ZPA_CUSTOMER_ID`, `ZPA_CLOUD` |
+
+Legacy base URL: `https://zsapi.<cloud>.net/api/v1` (ZIA) or `https://config.private.zscaler.com/...` (ZPA)
+
+Use legacy only when a specific field or endpoint is not available via OneAPI.
+
+### SCIM Auth — ZIA and ZPA User Provisioning
+
+For automated user/group provisioning from an IdP (Okta, Azure AD, etc.), SCIM uses a separate bearer token:
+
+| Product | SCIM Base URL | Notes |
+|---------|--------------|-------|
+| ZIA | `https://scim.zscaler.com/zia/<tenant-id>/scim/v2` | Enable SCIM in ZIA admin portal |
+| ZPA | `https://scim.zscaler.com/zpa/<tenant-id>/scim/v2` | Enable SCIM in ZPA admin portal |
+
+SCIM tokens are generated in the respective admin portal (not ZIdentity). They are separate from OneAPI credentials.
 
 ## Related API Reference
 

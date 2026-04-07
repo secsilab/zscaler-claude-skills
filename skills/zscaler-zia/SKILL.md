@@ -1,8 +1,8 @@
 ---
 name: zscaler-zia
-version: 1.1.0
+version: 1.2.0
 postman_revision: 2026-03-30
-description: Use when working with ZIA — firewall rules, URL filtering, DLP policies, SSL inspection, cloud apps, locations, GRE tunnels, sandbox, ATP, bandwidth, DNS control, forwarding, NAT, PAC files, admin audit logs, traffic management.
+description: Use when working with ZIA — firewall rules, URL filtering, DLP policies, SSL inspection, cloud apps, locations, GRE tunnels, sandbox, ATP, bandwidth, DNS control, forwarding, NAT, PAC files, admin audit logs, traffic management, AppTotal, Cloud NSS, VZEN, shadow IT, IoT, traffic capture, policy export.
 ---
 
 # Zscaler Internet Access (ZIA)
@@ -251,3 +251,105 @@ After any ZIA create/update/delete, call `zia_activate_configuration` (MCP) or `
 | **SERVER** | Minimal (no DNS proxy) | Limited | Server workloads, automated traffic |
 | **WORKLOAD** | Via Branch Connector | Via Branch Connector | Cloud/ZTB workloads |
 | **EXTRANET** | Extranet-specific | Extranet | Partner/extranet traffic |
+
+## Advanced Services (SDK-Available, MCP Gaps)
+
+These services are available via the ZIA API and SDK but are not yet exposed through MCP tools. Use OneAPI direct calls for all of them.
+
+### AppTotal
+
+AppTotal provides deep inspection and risk scoring for cloud applications beyond standard CASB categories. Lookups are by `appId` (not URL). Use it to get risk metadata for specific apps and inform cloud app control policy.
+
+| Operation | Endpoint |
+|-----------|----------|
+| Get app from catalog | `GET /apps/app?appId=<id>&verbose=<bool>` |
+| Submit app for sandbox analysis | `POST /apps/app` |
+| Search apps by name | `GET /apps/search?appName=<name>` |
+| List app views | `GET /app_views/list` |
+| List apps in a view | `GET /app_views/{id}/apps` |
+
+### Cloud NSS (Network Security Service)
+
+Cloud NSS streams ZIA logs to external SIEMs and SOC platforms without requiring on-premises NSS appliances. Despite the "Cloud NSS" branding, the API path uses `nssFeeds` (no `cloud` prefix).
+
+| Operation | Endpoint |
+|-----------|----------|
+| List NSS feeds | `GET /nssFeeds` |
+| Get NSS feed | `GET /nssFeeds/{id}` |
+| Create NSS feed | `POST /nssFeeds` |
+| Update NSS feed | `PUT /nssFeeds/{id}` |
+| Delete NSS feed | `DELETE /nssFeeds/{id}` |
+| List NSS servers | `GET /nssServers` |
+| Get NSS server types | `GET /nssServers/types` |
+
+Supported output formats: CEF, LEEF, JSON. Supported destinations: Splunk, QRadar, Azure Sentinel, generic syslog.
+
+### VZEN Clusters and Nodes (Virtual ZEN)
+
+VZEN (Virtual ZEN / `virtualZenClusters`, `virtualZenNodes`) allows deploying Zscaler enforcement nodes in private or sovereign cloud environments.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List VZEN clusters | `GET /virtualZenClusters` |
+| Get VZEN cluster | `GET /virtualZenClusters/{id}` |
+| Create VZEN cluster | `POST /virtualZenClusters` |
+| List VZEN nodes | `GET /virtualZenNodes` |
+| Get VZEN node | `GET /virtualZenNodes/{id}` |
+
+Use VZEN for government or regulated environments where traffic cannot egress to Zscaler's public cloud.
+
+### Bandwidth Control
+
+Bandwidth control throttles traffic by category, application, or user group to prevent bandwidth monopolization.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List bandwidth classes | `GET /bandwidthClasses` |
+| Create bandwidth class | `POST /bandwidthClasses` |
+| List bandwidth control rules | `GET /bandwidthControlRules` |
+| Create bandwidth control rule | `POST /bandwidthControlRules` |
+
+### IoT Report
+
+IoT discovery provides visibility into IoT device traffic patterns and risk. There is no aggregate `/iotReport` endpoint — the API exposes four resources under `/iotDiscovery`.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List device types | `GET /iotDiscovery/deviceTypes` |
+| List categories | `GET /iotDiscovery/categories` |
+| List classifications | `GET /iotDiscovery/classifications` |
+| List discovered devices | `GET /iotDiscovery/deviceList` |
+
+### Shadow IT Report
+
+Shadow IT discovery surfaces unauthorized cloud app usage across the tenant. The application listing is served by `/cloudApplications/lite` (not under `/shadowIT/...`). Only the export operations sit under `/shadowIT/applications/...`, and they are all `POST`.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List discovered cloud apps | `GET /cloudApplications/lite` |
+| Export shadow IT applications | `POST /shadowIT/applications/export` |
+| Export by user | `POST /shadowIT/applications/USER/exportCsv` |
+| Export by location | `POST /shadowIT/applications/LOCATION/exportCsv` |
+
+### Traffic Capture
+
+Traffic capture rules define packet capture triggers for diagnostic and forensic purposes.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List capture rules | `GET /trafficCaptureRules` |
+| Create capture rule | `POST /trafficCaptureRules` |
+| Update capture rule | `PUT /trafficCaptureRules/{id}` |
+| Delete capture rule | `DELETE /trafficCaptureRules/{id}` |
+
+### Policy Export
+
+Export the full ZIA policy configuration as a structured snapshot for backup or audit. There is a single `POST /exportPolicies` endpoint — filter by policy type via the request body, not query string.
+
+| Operation | Endpoint |
+|-----------|----------|
+| Export policies | `POST /exportPolicies` |
+
+## MCP Server
+
+Live CRUD operations for ZIA are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server). This skill provides workflow guidance and field gotchas; the MCP server executes the actual API calls via `zia_*` tools. See the MCP server repository for the full list of available tools and required parameters.

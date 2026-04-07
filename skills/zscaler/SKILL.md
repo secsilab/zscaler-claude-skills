@@ -1,6 +1,6 @@
 ---
 name: zscaler
-version: 1.0.0
+version: 1.1.0
 description: Use when managing ANY Zscaler component and you need to determine which product API to use, or when working across multiple products. Routes to the appropriate product skill.
 ---
 
@@ -15,14 +15,17 @@ This skill routes requests to the correct product skill. It does NOT contain det
 | ZIA | @zscaler-zia | 428 | 77 | Firewall, URL filtering, DLP, SSL, locations, sandbox, ATP |
 | ZPA | @zscaler-zpa | 328 | 70 | App segments, access policies, PRA, BA, connectors |
 | ZTB | @zscaler-ztb | 674 | 0 (AirGap API) | Branch sites, gateways, PBR, IPsec, VRRP, IPAM, SNMP |
-| ZCBC | @zscaler-zcbc | 97 | 0 | Cloud/Branch Connector via OneAPI |
+| ZCBC | @zscaler-zcbc | 97 | 0 | Cloud/Branch Connector via OneAPI (also known as ZTC/ZTW) |
 | ZCC | @zscaler-zcc | 33 | 4 | Client Connector devices, forwarding |
 | ZDX | @zscaler-zdx | 42 | 17 | Digital experience monitoring, alerts |
 | ZID | @zscaler-zid | 31 | 10 | Users, groups, API clients |
 | EASM | @zscaler-easm | 7 | 7 | External attack surface, findings |
 | ZWA | @zscaler-zwa | 19 | 0 | DLP incident lifecycle |
-| AI Guard | @zscaler-aiguard | 2 | 0 | Content detection, policy execution |
+| AI Guard | @zscaler-aiguard | 2 | 0 | Content detection, policy execution, AI Gateway |
 | ZInsights | @zscaler-zinsights | 16 | 16 | Analytics, shadow IT, threat intel |
+| ZMS | @zscaler-zms | — | zms_* | Microsegmentation — agents, resources, policy rules, app zones |
+| ZBI | @zscaler-zbi | — | 0 | Business Insights — custom apps, report configs, reports |
+| Terraformer | @zscaler-terraformer | — | CLI | Brownfield Terraform import for ZIA/ZPA/ZTC |
 
 ## Operational Skills
 
@@ -139,6 +142,20 @@ ZPA changes are instant — no activation needed.
 |------|-------------|
 | `zscaler_check_connectivity` | Test API connectivity to all services |
 | `zscaler_get_available_services` | List accessible services for current credentials |
+
+## Naming Aliases
+
+Zscaler product names differ across SDKs, Terraform providers, and documentation. Use this table to resolve cross-tool references:
+
+| This Skill | SDK (Python/Go) | Terraform Provider | Notes |
+|------------|-----------------|-------------------|-------|
+| `zscaler-zcbc` | `ztw` | `terraform-provider-ztc` | ZCBC rebranded to ZTC (Zero Trust Cloud); ztw in SDKs |
+| `zscaler-aiguard` | `zguard` | n/a | AIGuard module in Python SDK is `zguard` |
+| `zscaler-zinsights` | `zins` | n/a | ZInsights module in SDKs is `zins` |
+| `zscaler-zid` | `zidentity` | `terraform-provider-zpa` (partial) | ZIdentity uses its own portal and SDK module |
+| `zscaler-zms` | `zms` | n/a | Microsegmentation SDK module |
+
+**Search tip:** When looking up SDK source or documentation, use the SDK alias, not the skill name. For example, ZCBC SDK code lives under `zscaler/ztw/`, not `zscaler/zcbc/`.
 
 ## Context7 Documentation Lookup
 
