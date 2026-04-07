@@ -17,7 +17,9 @@ Available MCP tools: `zcc_list_devices`, `zcc_devices_csv_exporter`, `zcc_list_f
 For full API endpoint reference, see ENDPOINTS.md in this skill directory.
 
 ## Authentication
-OneAPI OAuth2. Base URL: `https://api.zsapi.net/zcc/api/v1`
+OneAPI OAuth2. Base URL: `https://api.zsapi.net/zcc/papi/public/v1`
+
+**Note:** ZCC uses the path prefix `/zcc/papi/public/v1` (not `/zcc/api/v1`). Both Go and Python SDKs confirm this.
 
 ## Common Patterns
 - List devices by OS type or user
@@ -26,135 +28,126 @@ OneAPI OAuth2. Base URL: `https://api.zsapi.net/zcc/api/v1`
 
 ## Full API Module Coverage
 
-The ZCC API (and Go SDK) has 20 service modules. The 4 MCP tools cover read-only device operations. All other modules require direct OneAPI calls (`https://api.zsapi.net/zcc/api/v1`).
+The ZCC API exposes ~20 service modules. The 4 MCP tools cover read-only device operations. All other modules require direct OneAPI calls.
 
-### Web Policy (`/webPolicy`)
+**Important:** ZCC uses RPC-style action endpoints (`/listByCompany`, `/edit`, `/getXyz`, `/setXyz`), not REST resource verbs. Several modules are read-only at the API level — write operations may require the admin portal.
+
+### Web Policy
 
 Controls which web categories and applications ZCC intercepts and forwards.
 
 | Operation | Endpoint |
 |-----------|----------|
-| Get web policy | `GET /webPolicy` |
-| Update web policy | `PUT /webPolicy` |
+| List web policies | `GET /web/policy/listByCompany` |
+| Edit web policy | `PUT /web/policy/edit` |
+| Activate web policy | `PUT /web/policy/activate` |
+| Delete web policy | `DELETE /web/policy/{id}/delete` |
 
-### Web Privacy (`/webPrivacy`)
+### Web Privacy
 
 Configures privacy-exempt domains and IPs — traffic to these destinations bypasses ZCC inspection.
 
 | Operation | Endpoint |
 |-----------|----------|
-| Get web privacy config | `GET /webPrivacy` |
-| Update web privacy config | `PUT /webPrivacy` |
+| Get web privacy config | `GET /getWebPrivacyInfo` |
+| Set web privacy config | `PUT /setWebPrivacyInfo` |
 
-### Failopen Policy (`/failOpenPolicy`)
+### Failopen Policy
 
 Defines ZCC behavior when the Zscaler cloud is unreachable: allow traffic (failopen) or block traffic (failclosed).
 
 | Operation | Endpoint |
 |-----------|----------|
-| Get failopen policy | `GET /failOpenPolicy` |
-| Update failopen policy | `PUT /failOpenPolicy` |
+| List failopen policies | `GET /webFailOpenPolicy/listByCompany` |
+| Edit failopen policy | `PUT /webFailOpenPolicy/edit` |
 
 **Recommendation:** Set to failopen for external users (internet dependency), failclosed for privileged/PCI workloads.
 
-### Forwarding Profiles (`/forwardingProfiles`)
+### Forwarding Profiles
 
-Forwarding profiles define tunnel mode (full/split), exclusions, and ZIA/ZPA targeting.
-
-| Operation | Endpoint |
-|-----------|----------|
-| List profiles | `GET /forwardingProfiles` |
-| Get profile | `GET /forwardingProfiles/{id}` |
-| Create profile | `POST /forwardingProfiles` |
-| Update profile | `PUT /forwardingProfiles/{id}` |
-| Delete profile | `DELETE /forwardingProfiles/{id}` |
-
-### Custom IP Apps (`/customIpApps`)
-
-Custom IP applications define specific IP ranges or subnets that ZCC should handle with custom routing logic.
+Forwarding profiles define tunnel mode (full/split), exclusions, and ZIA/ZPA targeting. Note: there is no GET-by-id; both create and update go through `POST /edit` (the request body carries the id for updates).
 
 | Operation | Endpoint |
 |-----------|----------|
-| List custom IP apps | `GET /customIpApps` |
-| Get custom IP app | `GET /customIpApps/{id}` |
-| Create custom IP app | `POST /customIpApps` |
-| Update custom IP app | `PUT /customIpApps/{id}` |
-| Delete custom IP app | `DELETE /customIpApps/{id}` |
+| List profiles | `GET /webForwardingProfile/listByCompany` |
+| Create or update profile | `POST /webForwardingProfile/edit` |
+| Delete profile | `DELETE /webForwardingProfile/{profileId}/delete` |
 
-### Predefined IP Apps (`/predefinedIpApps`)
+### Custom IP Apps (Read-Only)
 
-Predefined IP applications are Zscaler-managed app definitions (e.g., Microsoft 365 IP ranges, video conferencing endpoints).
+Custom IP applications define specific IP ranges or subnets. **Read-only at the API level** — create/update/delete are not exposed.
 
 | Operation | Endpoint |
 |-----------|----------|
-| List predefined IP apps | `GET /predefinedIpApps` |
-| Get predefined IP app | `GET /predefinedIpApps/{id}` |
-| Update predefined IP app | `PUT /predefinedIpApps/{id}` |
+| List custom IP apps | `GET /custom-ip-based-apps` |
+| Get custom IP app | `GET /custom-ip-based-apps/{appId}` |
 
-### Process-Based Apps (`/processBasedApps`)
+### Predefined IP Apps (Read-Only)
 
-Process-based applications map specific OS process names to ZCC forwarding behavior — route or bypass by executable.
-
-| Operation | Endpoint |
-|-----------|----------|
-| List process-based apps | `GET /processBasedApps` |
-| Get process-based app | `GET /processBasedApps/{id}` |
-| Create process-based app | `POST /processBasedApps` |
-| Update process-based app | `PUT /processBasedApps/{id}` |
-| Delete process-based app | `DELETE /processBasedApps/{id}` |
-
-### Application Profiles (`/applicationProfiles`)
-
-Application profiles bundle forwarding configuration, tunnel settings, trusted networks, and policy exclusions into a reusable template assigned to device groups.
+Predefined IP applications are Zscaler-managed app definitions (e.g., Microsoft 365 IP ranges, video conferencing endpoints). **Read-only.**
 
 | Operation | Endpoint |
 |-----------|----------|
-| List app profiles | `GET /applicationProfiles` |
-| Get app profile | `GET /applicationProfiles/{id}` |
-| Create app profile | `POST /applicationProfiles` |
-| Update app profile | `PUT /applicationProfiles/{id}` |
-| Delete app profile | `DELETE /applicationProfiles/{id}` |
+| List predefined IP apps | `GET /predefined-ip-based-apps` |
+| Get predefined IP app | `GET /predefined-ip-based-apps/{appId}` |
 
-### Web App Service (`/webAppService`)
+### Process-Based Apps (Read-Only)
+
+Process-based applications map specific OS process names to ZCC forwarding behavior. **Read-only.**
+
+| Operation | Endpoint |
+|-----------|----------|
+| List process-based apps | `GET /process-based-apps` |
+| Get process-based app | `GET /process-based-apps/{appId}` |
+
+### Application Profiles
+
+Application profiles bundle forwarding configuration, tunnel settings, trusted networks, and policy exclusions into a reusable template assigned to device groups. Update uses `PATCH`, not `PUT`. No create/delete via API.
+
+| Operation | Endpoint |
+|-----------|----------|
+| List app profiles | `GET /application-profiles` |
+| Get app profile | `GET /application-profiles/{profileId}` |
+| Update app profile | `PATCH /application-profiles/{profileId}` |
+
+### Web App Service
 
 Web app service configuration controls ZCC's local HTTP/HTTPS proxy behavior for specific applications.
 
 | Operation | Endpoint |
 |-----------|----------|
-| Get web app service config | `GET /webAppService` |
-| Update web app service config | `PUT /webAppService` |
+| List web app service config | `GET /webAppService/listByCompany` |
 
-### Admin Roles (`/adminRoles`)
+### Admin Roles (Read-Only)
 
-Admin roles scope what ZCC portal administrators can view and modify.
-
-| Operation | Endpoint |
-|-----------|----------|
-| List admin roles | `GET /adminRoles` |
-| Get admin role | `GET /adminRoles/{id}` |
-| Create admin role | `POST /adminRoles` |
-| Update admin role | `PUT /adminRoles/{id}` |
-| Delete admin role | `DELETE /adminRoles/{id}` |
-
-### Entitlements (`/entitlements`)
-
-Entitlements control which ZCC features are licensed and available to users.
+Admin roles scope what ZCC portal administrators can view and modify. **Read-only at the API level.**
 
 | Operation | Endpoint |
 |-----------|----------|
-| Get entitlements | `GET /entitlements` |
+| Get admin roles | `GET /getAdminRoles` |
+
+### Entitlements
+
+Entitlements control which ZCC features are licensed and available to users. There is no unified `/entitlements` endpoint — entitlements are split per service (ZDX vs ZPA).
+
+| Operation | Endpoint |
+|-----------|----------|
+| Get ZDX group entitlements | `GET /getZdxGroupEntitlements` |
+| Update ZDX group entitlement | `PUT /updateZdxGroupEntitlement` |
+| Get ZPA group entitlements | `GET /getZpaGroupEntitlements` |
+| Update ZPA group entitlement | `PUT /updateZpaGroupEntitlement` |
 
 ### Other Modules
 
-| Module | Endpoint | Notes |
-|--------|----------|-------|
-| Admin Users | `/adminUsers` | ZCC-specific admin accounts |
-| Company | `/company` | Tenant company profile |
-| Trusted Networks | `/trustedNetworks` | Read via MCP (`zcc_list_trusted_networks`), write via API |
-| Manage Password | `/managePass` | Uninstall password management |
-| Secrets | `/secrets` | Registration secrets for enrollment |
-| Remove Devices | `/removeDevices` | Bulk device removal |
-| Download Devices | `/downloadDevices` | Device inventory download |
+| Module | Notes |
+|--------|-------|
+| Admin Users | ZCC-specific admin accounts |
+| Company | Tenant company profile |
+| Trusted Networks | Read via MCP (`zcc_list_trusted_networks`), write via API |
+| Manage Password | Uninstall password management |
+| Secrets | Registration secrets for enrollment |
+| Remove Devices | Bulk device removal |
+| Download Devices | Device inventory download |
 
 ## Known Limitations
 - MCP tools are read-only (4 tools)

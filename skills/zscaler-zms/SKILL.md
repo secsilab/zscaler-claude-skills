@@ -1,99 +1,76 @@
 ---
 name: zscaler-zms
 version: 1.0.0
-description: Use when working with Zscaler Microsegmentation (ZMS) — agents, agent groups, provisioning keys (nonces), resources, resource groups, policy rules, app zones, app catalog, and tags.
+description: Use when working with Zscaler Microsegmentation (ZMS) — read-only inventory of agents, agent groups, provisioning keys (nonces), resources, resource groups, policy rules, app zones, app catalog, and tags via the MCP server. Write operations require the admin portal or SDK.
 ---
 
 # Zscaler Microsegmentation (ZMS)
 
 ## Overview
 
-ZMS provides identity-based microsegmentation for workloads. It enforces zero trust policy at the workload level by tagging resources, grouping them, and applying policy rules that control east-west traffic. Use this skill for managing the full ZMS lifecycle: deploying agents, provisioning resources, building policy rules, and managing app zones.
+ZMS provides identity-based microsegmentation for workloads. It enforces zero trust policy at the workload level by tagging resources, grouping them, and applying policy rules that control east-west traffic. Use this skill for inventorying ZMS state: agents, resources, policy rules, and app zones.
 
-ZMS uses a GraphQL-based API. Operations are executed via the `zms_` MCP tool prefix.
+ZMS uses a GraphQL-based API. The `zscaler-mcp-server` exposes **20 read-only tools** under the `zms_` prefix. **No write operations** (create/update/delete) are available through MCP — those must be done via the ZMS admin portal or the Python SDK (`ZMSService`).
 
 ## MCP Tools
 
-ZMS operations use the `zms_` tool prefix. The primary modules and their operations:
+ZMS MCP tools are read-only. The full list:
 
 ### Agents
-| Operation | MCP Tool |
-|-----------|----------|
-| List agents | `zms_list_agents` |
-| Get agent | `zms_get_agent` |
-| Update agent | `zms_update_agent` |
-| Delete agent | `zms_delete_agent` |
+| Tool | Purpose |
+|------|---------|
+| `zms_list_agents` | List all agents |
+| `zms_get_agent_connection_status_statistics` | Aggregate connection-status stats |
+| `zms_get_agent_version_statistics` | Aggregate version stats |
 
 ### Agent Groups
-| Operation | MCP Tool |
-|-----------|----------|
-| List agent groups | `zms_list_agent_groups` |
-| Get agent group | `zms_get_agent_group` |
-| Create agent group | `zms_create_agent_group` |
-| Update agent group | `zms_update_agent_group` |
-| Delete agent group | `zms_delete_agent_group` |
+| Tool | Purpose |
+|------|---------|
+| `zms_list_agent_groups` | List all agent groups |
+| `zms_get_agent_group_totp_secrets` | Retrieve TOTP secrets for an agent group |
 
-### Provisioning Keys (Nonces)
-| Operation | MCP Tool |
-|-----------|----------|
-| List nonces | `zms_list_nonces` |
-| Get nonce | `zms_get_nonce` |
-| Create nonce | `zms_create_nonce` |
-| Delete nonce | `zms_delete_nonce` |
+### Nonces (Provisioning Keys)
+| Tool | Purpose |
+|------|---------|
+| `zms_list_nonces` | List provisioning nonces |
+| `zms_get_nonce` | Get a single nonce |
 
 ### Resources
-| Operation | MCP Tool |
-|-----------|----------|
-| List resources | `zms_list_resources` |
-| Get resource | `zms_get_resource` |
-| Create resource | `zms_create_resource` |
-| Update resource | `zms_update_resource` |
-| Delete resource | `zms_delete_resource` |
+| Tool | Purpose |
+|------|---------|
+| `zms_list_resources` | List all resources |
+| `zms_get_resource_protection_status` | Get protection status for a resource |
+| `zms_get_metadata` | Get resource metadata |
 
 ### Resource Groups
-| Operation | MCP Tool |
-|-----------|----------|
-| List resource groups | `zms_list_resource_groups` |
-| Get resource group | `zms_get_resource_group` |
-| Create resource group | `zms_create_resource_group` |
-| Update resource group | `zms_update_resource_group` |
-| Delete resource group | `zms_delete_resource_group` |
+| Tool | Purpose |
+|------|---------|
+| `zms_list_resource_groups` | List all resource groups |
+| `zms_get_resource_group_members` | List members of a resource group |
+| `zms_get_resource_group_protection_status` | Protection status of a resource group |
 
 ### Policy Rules
-| Operation | MCP Tool |
-|-----------|----------|
-| List policy rules | `zms_list_policy_rules` |
-| Get policy rule | `zms_get_policy_rule` |
-| Create policy rule | `zms_create_policy_rule` |
-| Update policy rule | `zms_update_policy_rule` |
-| Delete policy rule | `zms_delete_policy_rule` |
+| Tool | Purpose |
+|------|---------|
+| `zms_list_policy_rules` | List configured policy rules |
+| `zms_list_default_policy_rules` | List built-in default policy rules |
 
 ### App Zones
-| Operation | MCP Tool |
-|-----------|----------|
-| List app zones | `zms_list_app_zones` |
-| Get app zone | `zms_get_app_zone` |
-| Create app zone | `zms_create_app_zone` |
-| Update app zone | `zms_update_app_zone` |
-| Delete app zone | `zms_delete_app_zone` |
+| Tool | Purpose |
+|------|---------|
+| `zms_list_app_zones` | List all app zones |
 
 ### App Catalog
-| Operation | MCP Tool |
-|-----------|----------|
-| List catalog entries | `zms_list_app_catalog` |
-| Get catalog entry | `zms_get_app_catalog` |
-| Create catalog entry | `zms_create_app_catalog` |
-| Update catalog entry | `zms_update_app_catalog` |
-| Delete catalog entry | `zms_delete_app_catalog` |
+| Tool | Purpose |
+|------|---------|
+| `zms_list_app_catalog` | List app catalog entries |
 
 ### Tags
-| Operation | MCP Tool |
-|-----------|----------|
-| List tags | `zms_list_tags` |
-| Get tag | `zms_get_tag` |
-| Create tag | `zms_create_tag` |
-| Update tag | `zms_update_tag` |
-| Delete tag | `zms_delete_tag` |
+| Tool | Purpose |
+|------|---------|
+| `zms_list_tag_namespaces` | List tag namespaces |
+| `zms_list_tag_keys` | List tag keys |
+| `zms_list_tag_values` | List tag values |
 
 ## Authentication
 
@@ -106,53 +83,52 @@ MCP tools handle authentication automatically via `.mcp.json` credentials.
 
 ## Common Patterns
 
-### Deploy a New Agent
+### Inventory Active Agents
 
-1. Create a provisioning key (nonce): `zms_create_nonce`
-   - Nonces are one-time-use tokens for agent bootstrap
-   - Set an expiry appropriate for the deployment window
-2. Deploy the ZMS agent on the workload using the nonce
-3. Verify agent registration: `zms_list_agents` — agent appears after bootstrap
-4. Assign agent to group: `zms_update_agent` with `agent_group_id`
+1. List all agents: `zms_list_agents`
+2. Check connection health: `zms_get_agent_connection_status_statistics`
+3. Check version distribution: `zms_get_agent_version_statistics`
+4. Identify which agent group each belongs to via `zms_list_agent_groups`
 
-### Create Resource Groups and Apply Policy
+### Audit Resource Protection Coverage
 
-1. Create resource group: `zms_create_resource_group`
-   - Group resources by workload type (e.g., web-tier, db-tier, api-tier)
-2. Add resources to group: `zms_create_resource` with `resource_group_id`
-3. Create policy rule: `zms_create_policy_rule`
-   - Specify source resource group, destination resource group, allowed protocols/ports
-   - Default posture: deny-all. Only explicitly permitted traffic flows.
-4. Validate rule: `zms_get_policy_rule` to confirm configuration
+1. List resources: `zms_list_resources`
+2. For each critical resource, check protection: `zms_get_resource_protection_status`
+3. List resource groups: `zms_list_resource_groups`
+4. Walk group members: `zms_get_resource_group_members`
+5. Confirm group-level protection: `zms_get_resource_group_protection_status`
 
-### Configure App Zones
+### Review Policy Rules
 
-App zones define logical security perimeters for application tiers.
+1. List configured rules: `zms_list_policy_rules`
+2. List default (built-in) rules: `zms_list_default_policy_rules`
+3. Cross-reference with resource groups to validate intended traffic flows
 
-1. Create app zone: `zms_create_app_zone`
-   - Name zone by function (e.g., `production-web`, `staging-db`)
-2. Register app in catalog: `zms_create_app_catalog`
-   - Catalog ties the business application identity to the zone
-3. Associate resource groups with app zone via policy rules
-4. Tag resources for observability: `zms_create_tag` + assign to resources
+### Explore Tag Hierarchy
 
-### Manage Agent Groups
+ZMS tags are namespaced (namespace → key → value).
 
-Agent groups control which workloads share policy scope.
+1. List namespaces: `zms_list_tag_namespaces`
+2. List keys in a namespace: `zms_list_tag_keys`
+3. List values for a key: `zms_list_tag_values`
 
-1. List existing groups: `zms_list_agent_groups`
-2. Create group by environment or function: `zms_create_agent_group`
-3. Move agents between groups: `zms_update_agent` with updated `agent_group_id`
-4. Delete empty groups only — active agents must be reassigned first
+### Provision a New Agent (Write — Admin Portal or SDK)
+
+Provisioning agents requires write operations not exposed via MCP. Workflow:
+
+1. **Admin portal:** Settings → Provisioning → Generate Nonce
+2. Deploy ZMS agent on the workload using the nonce
+3. Verify registration via MCP: `zms_list_agents`
+4. Assign agent to group via the admin portal or `ZMSService` Python SDK
 
 ## Known Limitations
 
-- **Nonces are single-use** — create one per agent deployment; do not reuse
-- **Policy is deny-all by default** — every required traffic flow must have an explicit policy rule
-- **Agent removal** — deleting an agent does not automatically remove its resource mappings; clean up resources first
-- **GraphQL schema** — use Context7 to look up exact field names and mutation shapes before calling mutations
-- **MCP tool availability** — not all ZMS operations may have MCP tools; use the Python SDK (`ZMSService`) for any gaps
+- **Read-only via MCP** — no `create_*`, `update_*`, or `delete_*` tools exist
+- **Write operations** require the admin portal or the Python SDK (`from zscaler import ZscalerClient; client.zms.policy_rules.create(...)`)
+- **Nonces are single-use** — generate a new one for each agent deployment
+- **Default-deny policy** — all traffic flows must be explicitly permitted by a policy rule
+- **GraphQL schema** — for SDK or direct API work, use Context7 to look up exact field names and mutation shapes
 
 ## MCP Server
 
-Live CRUD operations for ZMS are available via the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server). This skill provides workflow guidance and context; the MCP server executes the API calls.
+The 20 read-only ZMS tools are provided by the [zscaler-mcp-server](https://github.com/zscaler/zscaler-mcp-server). For write operations, use the Python SDK or the ZMS admin portal — the MCP server does not currently expose ZMS mutations.
