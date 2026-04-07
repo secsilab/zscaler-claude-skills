@@ -64,6 +64,26 @@ def extract_endpoints(node, folder=None):
     return results
 
 
+def apply_overrides(endpoints, overrides):
+    """Apply manual corrections to fix known upstream Postman bugs.
+
+    Each override entry matches by request `name` and replaces `path` and/or
+    `method`. Use sparingly — only for confirmed bugs in the source collection.
+    """
+    if not overrides:
+        return endpoints
+    by_name = {o["name"]: o for o in overrides}
+    for ep in endpoints:
+        override = by_name.get(ep["name"])
+        if override is None:
+            continue
+        if "path" in override:
+            ep["path"] = override["path"]
+        if "method" in override:
+            ep["method"] = override["method"]
+    return endpoints
+
+
 def format_endpoints_md(product_name, endpoints, source_date):
     """Format endpoints as a Markdown document."""
     lines = [
@@ -172,6 +192,7 @@ def generate_for_collection(name, config, check_only=False, target_skill=None):
     collection = fetch_json(config["url"])
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
+    overrides_by_skill = config.get("overrides", {})
     if "product_folders" in config:
         for item in collection.get("item", []):
             folder_name = item.get("name", "")
@@ -181,6 +202,7 @@ def generate_for_collection(name, config, check_only=False, target_skill=None):
             if target_skill and skill_name != target_skill:
                 continue
             endpoints = extract_endpoints(item)
+            endpoints = apply_overrides(endpoints, overrides_by_skill.get(skill_name, []))
             skill_dir = os.path.join(SKILLS_DIR, skill_name)
             endpoints_path = os.path.join(skill_dir, "ENDPOINTS.md")
             old_endpoints = parse_existing_endpoints(endpoints_path)
@@ -199,6 +221,7 @@ def generate_for_collection(name, config, check_only=False, target_skill=None):
         if target_skill and skill_name != target_skill:
             return report
         endpoints = extract_endpoints(collection)
+        endpoints = apply_overrides(endpoints, overrides_by_skill.get(skill_name, []))
         skill_dir = os.path.join(SKILLS_DIR, skill_name)
         endpoints_path = os.path.join(skill_dir, "ENDPOINTS.md")
         old_endpoints = parse_existing_endpoints(endpoints_path)

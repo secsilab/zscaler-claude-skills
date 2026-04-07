@@ -11,6 +11,7 @@ from generate_endpoints import (
     format_endpoints_md,
     diff_endpoints,
     parse_existing_endpoints,
+    apply_overrides,
 )
 
 
@@ -127,6 +128,37 @@ def test_parse_existing_endpoints(tmp_path):
 def test_parse_existing_endpoints_missing():
     eps = parse_existing_endpoints("/nonexistent/path.md")
     assert eps == []
+
+
+def test_apply_overrides_path():
+    endpoints = [
+        {"method": "PUT", "path": "/v1/wrongPath", "name": "fixMe", "folder": "F"},
+        {"method": "GET", "path": "/v1/keep", "name": "leaveAlone", "folder": "F"},
+    ]
+    overrides = [{"name": "fixMe", "path": "/v1/correctPath"}]
+    apply_overrides(endpoints, overrides)
+    assert endpoints[0]["path"] == "/v1/correctPath"
+    assert endpoints[1]["path"] == "/v1/keep"
+
+
+def test_apply_overrides_method():
+    endpoints = [{"method": "GET", "path": "/v1/x", "name": "wrongMethod", "folder": "F"}]
+    apply_overrides(endpoints, [{"name": "wrongMethod", "method": "POST"}])
+    assert endpoints[0]["method"] == "POST"
+
+
+def test_apply_overrides_empty():
+    endpoints = [{"method": "GET", "path": "/v1/x", "name": "x", "folder": "F"}]
+    apply_overrides(endpoints, [])
+    assert endpoints[0]["path"] == "/v1/x"
+    apply_overrides(endpoints, None)
+    assert endpoints[0]["path"] == "/v1/x"
+
+
+def test_apply_overrides_no_match():
+    endpoints = [{"method": "GET", "path": "/v1/x", "name": "x", "folder": "F"}]
+    apply_overrides(endpoints, [{"name": "doesNotExist", "path": "/v1/never"}])
+    assert endpoints[0]["path"] == "/v1/x"
 
 
 if __name__ == "__main__":

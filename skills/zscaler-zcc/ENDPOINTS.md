@@ -9,7 +9,7 @@
 | GET | `/v1/getZpaGroupEntitlements` | getZpaGroupEntitlements |
 | GET | `/v1/getZdxGroupEntitlements` | getZdxGroupEntitlements |
 | PUT | `/v1/updateZdxGroupEntitlement` | updateZdxGroupEntitlement |
-| PUT | `/v1/updateZdxGroupEntitlement` | updateZpaGroupEntitlement |
+| PUT | `/v1/updateZpaGroupEntitlement` | updateZpaGroupEntitlement |
 
 ### Trusted Networks (3 endpoints)
 
