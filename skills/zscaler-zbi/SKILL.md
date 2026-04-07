@@ -117,10 +117,18 @@ POST /reports/customapps
 POST /report/download
 {
   "fileName": "<report-file-name>",
-  "reportType": "customapps",
-  "subType": "OVERVIEW"
+  "reportType": "APPLICATION",
+  "subType": "CustomDataFeed"
 }
 ```
+
+**Important:** The download API uses a different enum domain than the report-config API. Do not confuse the two:
+
+| Field | Used by | Allowed values |
+|-------|---------|----------------|
+| Report config `sub_type` | `POST/PUT /reports/customapps` | `OVERVIEW`, `USERS` |
+| Download `reportType` | `POST /report/download` | `APPLICATION`, `DATA_EXPLORER`, `WORKPLACE` |
+| Download `subType` | `POST /report/download` | `CustomDataFeed`, `ScheduledReports`, `SaveAndSchedule` |
 
 The response contains the report payload (CSV or JSON depending on configuration).
 
@@ -129,6 +137,8 @@ The response contains the report payload (CSV or JSON depending on configuration
 ```
 GET /report/all
 ```
+
+Optional query params: `reportType`, `subType` (using the download enums above), `startTime`, `endTime`, `reportName`.
 
 Returns metadata for every generated report. Use `fileName` from this response to drive `POST /report/download`.
 
