@@ -1,5 +1,5 @@
-<!-- AUTO-GENERATED from Zscaler Postman collection. Do not edit manually. -->
-<!-- Source: Extracted from SKILL.md | Updated: 2026-03-30 -->
+<!-- Manually maintained — ZInsights has no Postman collection. -->
+<!-- MCP tool reference extracted from SKILL.md | Updated: 2026-03-30 -->
 # Zscaler Insights (ZInsights) API Reference
 
 ZInsights endpoints are accessed via MCP tools (no direct REST API documentation in Postman). The MCP tools map to internal Zscaler reporting APIs.

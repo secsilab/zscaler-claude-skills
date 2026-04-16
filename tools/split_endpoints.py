@@ -15,6 +15,7 @@ Usage:
 
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
 
 # Repo root is one level up from tools/
@@ -36,7 +37,7 @@ SKILLS = {
     "zscaler-zinsights": "Zscaler Insights (ZInsights)",
 }
 
-UPDATED_DATE = "2026-03-30"
+UPDATED_DATE = datetime.now().strftime("%Y-%m-%d")
 
 REFERENCE_LINE = "\nFor full API endpoint reference, see ENDPOINTS.md in this skill directory.\n\n"
 

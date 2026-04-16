@@ -45,6 +45,7 @@ jobs:
 
           git checkout -b "$BRANCH"
           git add skills/*/ENDPOINTS.md skills/*/SKILL.md tools/postman_sources.json
+          git diff --cached --quiet && { echo "No file changes after regeneration."; exit 0; }
           git commit -m "chore: update endpoints from Postman collections ($DATE)"
           git push origin "$BRANCH"
 

@@ -1,6 +1,6 @@
 # Zscaler Skills Suite for Claude Code
 
-115 skills for Zscaler — plan with [zstack](https://github.com/pganti/zstack), execute with API. **1,677 endpoints** covered.
+115 skills for Zscaler — plan with [zstack](https://github.com/pganti/zstack), execute with API. **1,634 endpoints** covered.
 
 ## Install
 
@@ -50,10 +50,10 @@ Loaded automatically by the router. Each skill has a `SKILL.md` (human-written e
 
 | Command | Endpoints | Covers |
 |---------|-----------|--------|
-| `/zscaler-zia` | 428 | Firewall, URL filtering, DLP, SSL, cloud apps, locations, GRE, sandbox |
+| `/zscaler-zia` | 401 | Firewall, URL filtering, DLP, SSL, cloud apps, locations, GRE, sandbox |
 | `/zscaler-zpa` | 328 | App segments, access policies, PRA/BA, connectors, SCIM, isolation |
-| `/zscaler-ztb` | 674 | Sites, gateways, VLANs, PBR, VRRP, IPsec, GRE, WireGuard, BGP, OSPF |
-| `/zscaler-zcbc` | 97 | Cloud & Branch Connector — partner integrations, connector groups (also ZTC/ZTW) |
+| `/zscaler-ztb` | 673 | Sites, gateways, VLANs, PBR, VRRP, IPsec, GRE, WireGuard, BGP, OSPF |
+| `/zscaler-zcbc` | 82 | Cloud & Branch Connector — partner integrations, connector groups (also ZTC/ZTW) |
 | `/zscaler-zcc` | 33 | Client Connector — devices, forwarding profiles, web policy, entitlements |
 | `/zscaler-zdx` | 42 | Digital Experience — app monitoring, alerts, deep traces |
 | `/zscaler-zid` | 31 | ZIdentity — users, groups, API clients, directory sync |
